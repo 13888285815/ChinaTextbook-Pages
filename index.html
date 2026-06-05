@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>中国教材电子课本</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#1a1a2e;height:100vh;display:flex;flex-direction:column;overflow:hidden;color:#e0e0e0}
@@ -207,7 +208,7 @@ body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;backgr
         <p>请从左侧选择教材</p>
         <span class="hint">单击文件名即可预览PDF</span>
       </div>
-      <iframe id="pdfFrame" style="display:none" sandbox="allow-scripts allow-same-origin allow-popups"></iframe>
+      <canvas id="pdfCanvas" style="display:none;max-width:100%;height:auto;box-shadow:0 4px 20px rgba(0,0,0,.3)"></canvas>
     </div>
   </div>
 </div>
@@ -255,14 +256,16 @@ function initSplit(id,leftEl,rightEl){const s=document.getElementById(id);let dr
 initSplit('splitSidebar',document.getElementById('sidebar'),document.getElementById('thumbPanel'));
 
 // ---- 树渲染 ----
-function renderTree(nodes,container,depth=0){container.innerHTML='';nodes.forEach(n=>{const el=document.createElement('div');el.className='t-node';const lb=document.createElement('div');lb.className='t-label';lb.style.paddingLeft=(depth*16+8)+'px';if(n.children){const ar=document.createElement('span');ar.className='t-arrow';ar.textContent='▶';lb.appendChild(ar);const ic=document.createElement('span');ic.className='t-icon';ic.textContent=['📚','📖','📘','📋'][Math.min(depth,3)];lb.appendChild(ic);const nm=document.createElement('span');nm.className='t-name';nm.textContent=n.text;lb.appendChild(nm);lb.onclick=e=>{e.stopPropagation();const ch=el.querySelector('.t-children');const ar2=lb.querySelector('.t-arrow');ch.classList.toggle('open');ar2.classList.toggle('open')}}else{const ic=document.createElement('span');ic.className='t-icon';ic.textContent='📕';lb.appendChild(ic);const nm=document.createElement('span');nm.className='t-name';nm.textContent=n.text;lb.appendChild(nm);if(n.size){const sz=document.createElement('span');sz.className='t-size';sz.textContent=n.size;lb.appendChild(sz)}lb.onclick=()=>{openPdf(n);document.querySelectorAll('.t-label.active').forEach(x=>x.classList.remove('active'));lb.classList.add('active')};lb.ondblclick=()=>{if(n.url)window.open(n.url,"_blank")}}el.appendChild(lb);if(n.children){const ch=document.createElement('div');ch.className='t-children';renderTree(n.children,ch,depth+1);el.appendChild(ch)}container.appendChild(el)})}
+function renderTree(nodes,container,depth=0){container.innerHTML='';nodes.forEach(n=>{const el=document.createElement('div');el.className='t-node';const lb=document.createElement('div');lb.className='t-label';lb.style.paddingLeft=(depth*16+8)+'px';if(n.children){const ar=document.createElement('span');ar.className='t-arrow';ar.textContent='▶';lb.appendChild(ar);const ic=document.createElement('span');ic.className='t-icon';ic.textContent=['📚','📖','📘','📋'][Math.min(depth,3)];lb.appendChild(ic);const nm=document.createElement('span');nm.className='t-name';nm.textContent=n.text;lb.appendChild(nm);lb.onclick=e=>{e.stopPropagation();const ch=el.querySelector('.t-children');const ar2=lb.querySelector('.t-arrow');ch.classList.toggle('open');ar2.classList.toggle('open')}}else{const ic=document.createElement('span');ic.className='t-icon';ic.textContent='📕';lb.appendChild(ic);const nm=document.createElement('span');nm.className='t-name';nm.textContent=n.text;lb.appendChild(nm);if(n.size){const sz=document.createElement('span');sz.className='t-size';sz.textContent=n.size;lb.appendChild(sz)}lb.onclick=()=>{openPdf(n);document.querySelectorAll('.t-label.active').forEach(x=>x.classList.remove('active'));lb.classList.add('active')}}el.appendChild(lb);if(n.children){const ch=document.createElement('div');ch.className='t-children';renderTree(n.children,ch,depth+1);el.appendChild(ch)}container.appendChild(el)})}
 
 function onSearch(q){q=q.toLowerCase().trim();if(!q){renderTree(TREE_DATA,document.getElementById('treeWrap'));return}const f=filterT(TREE_DATA,q);renderTree(f,document.getElementById('treeWrap'));document.querySelectorAll('.t-children').forEach(x=>x.classList.add('open'));document.querySelectorAll('.t-arrow').forEach(x=>x.classList.add('open'))}
 function filterT(nodes,q){return nodes.map(n=>{if(n.children){const c=filterT(n.children,q);if(c.length||n.text.toLowerCase().includes(q))return Object.assign({},n,{children:c});return null}return n.text.toLowerCase().includes(q)?n:null}).filter(x=>x)}
 
 // ---- PDF预览 ----
 let zoom=100;
-function openPdf(node){curUrl=node.url;curName=node.text;curSize=node.size||'';document.getElementById('emptyState').style.display='none';const fr=document.getElementById('pdfFrame');fr.style.display='block';console.log('打开PDF:',node.url);const viewer='https://docs.google.com/gview?embedded=true&url=';try{fr.src=viewer+encodeURIComponent(node.url)}catch(e){console.error('加载失败:',e);toast('⚠️ 预览失败，请双击在新窗口打开')}document.getElementById('statusFile').textContent=node.text;document.getElementById('statusSize').textContent=node.size||'';genThumbs()};list.appendChild(item)}}
+function openPdf(node){curUrl=node.url;curName=node.text;curSize=node.size||'';document.getElementById('emptyState').style.display='none';const canvas=document.getElementById('pdfCanvas');canvas.style.display='block';console.log('打开PDF:',node.url);try{if(typeof pdfjsLib!=='undefined'){pdfjsLib.getDocument(node.url).promise.then(function(pdf){pdf.getPage(1).then(function(page){const viewport=page.getViewport({scale:1.5});canvas.height=viewport.height;canvas.width=viewport.width;page.render({canvasContext:canvas.getContext('2d'),viewport:viewport})})});genThumbs()}else{const fr=document.createElement('iframe');fr.style.width='100%';fr.style.height='100%';fr.style.border='none';fr.src='https://docs.google.com/gview?embedded=true&url='+encodeURIComponent(node.url);canvas.parentNode.replaceChild(fr,canvas)}}catch(e){console.error('加载失败:',e);toast('⚠️ 预览失败，请双击在新窗口打开')}document.getElementById('statusFile').textContent=node.text;document.getElementById('statusSize').textContent=node.size||''}
+
+function genThumbs(){const list=document.getElementById('thumbList');list.innerHTML='';for(let i=1;i<=20;i++){const item=document.createElement('div');item.className='thumb-item'+(i===1?' active':'');item.innerHTML='<div class="page-img"><i class="fas fa-file-alt"></i></div><div class="page-num">'+i+'</div>';item.onclick=()=>{document.querySelectorAll('.thumb-item').forEach(x=>x.classList.remove('active'));item.classList.add('active')};list.appendChild(item)}}
 
 // ---- 缩放 ----
 function zoomIn(){zoom=Math.min(zoom+25,300);applyZoom()}
