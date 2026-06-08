@@ -275,21 +275,36 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 </div>
 <div class="toast" id="toast"></div>
 <div class="shortcut-hint" id="shortcutHint">
-  <h4><i class="fas fa-keyboard"></i> 快捷键</h4>
-  <div><span>上一页</span><kbd>←</kbd></div>
-  <div><span>下一页</span><kbd>→</kbd></div>
+  <h4><i class="fas fa-keyboard"></i> 快捷键 <span style="font-size:11px;color:#ffd166;float:right;">需授权</span></h4>
+  <div><span>上一页</span><kbd>←</kbd> <kbd>PgUp</kbd></div>
+  <div><span>下一页</span><kbd>→</kbd> <kbd>PgDn</kbd> <kbd>Space</kbd></div>
+  <div><span>第一页</span><kbd>Home</kbd></div>
+  <div><span>最后一页</span><kbd>End</kbd></div>
   <div><span>放大</span><kbd>+</kbd></div>
-  <div><span>缩小</span><kbd>−</kbd></div>
+  <div><span>缩小</span><kbd>-</kbd></div>
   <div><span>适应宽度</span><kbd>0</kbd></div>
   <div><span>全屏</span><kbd>F</kbd></div>
   <div><span>书签</span><kbd>B</kbd></div>
+  <div><span>目录</span><kbd>T</kbd></div>
   <div><span>搜索</span><kbd>/</kbd></div>
+  <div><span>跳转页码</span><kbd>G</kbd></div>
+  <div><span>快捷键帮助</span><kbd>?</kbd> <span style="font-size:10px;color:#8f98c8;">(无需授权)</span></div>
   <div><span>退出全屏</span><kbd>Esc</kbd></div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;color:#8f98c8;">
+    提示：数字键 1-9 可快速跳转到第 n×10 页
+  </div>
+  <div style="margin-top:8px;font-size:11px;color:#8f98c8;">
+    Ctrl/Cmd 组合键：F搜索、B书签、T目录、M全屏
+  </div>
+  <div style="margin-top:8px;font-size:11px;color:#ffd166;">
+    ⚠️ 所有功能需要设置Token后才能使用
+  </div>
 </div>
 <button class="sidebar-float-toggle" id="sidebarFloatToggle" onclick="toggleSidebar()" title="打开目录"><i class="fas fa-folder-tree"></i></button>
 
 <!-- 右键菜单 -->
-<div id="contextMenu" style="position:fixed;display:none;z-index:9999;min-width:180px;background:rgba(20,30,60,.98);border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(12px);padding:8px 0;">
+<div id="contextMenu" style="position:fixed;display:none;z-index:9999;min-width:200px;max-height:80vh;overflow-y:auto;background:rgba(20,30,60,.98);border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(12px);padding:8px 0;">
+  <!-- 缩放 -->
   <div onclick="contextMenuAction('zoomIn')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
     <i class="fas fa-search-plus" style="width:16px;color:#7c5dfc"></i> 放大 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">+</span>
   </div>
@@ -300,28 +315,48 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
     <i class="fas fa-expand" style="width:16px;color:#7c5dfc"></i> 适应宽度 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">0</span>
   </div>
   <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <!-- 翻页 -->
   <div onclick="contextMenuAction('prevPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
-    <i class="fas fa-chevron-left" style="width:16px;color:#7c5dfc"></i> 上一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">←</span>
+    <i class="fas fa-chevron-left" style="width:16px;color:#7c5dfc"></i> 上一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">← / PgUp</span>
   </div>
   <div onclick="contextMenuAction('nextPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
-    <i class="fas fa-chevron-right" style="width:16px;color:#7c5dfc"></i> 下一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">→</span>
+    <i class="fas fa-chevron-right" style="width:16px;color:#7c5dfc"></i> 下一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">→ / PgDn</span>
+  </div>
+  <div onclick="contextMenuAction('firstPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-angle-double-left" style="width:16px;color:#7c5dfc"></i> 第一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">Home</span>
+  </div>
+  <div onclick="contextMenuAction('lastPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-angle-double-right" style="width:16px;color:#7c5dfc"></i> 最后一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">End</span>
+  </div>
+  <div onclick="contextMenuAction('goToPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-arrow-circle-right" style="width:16px;color:#7c5dfc"></i> 跳转到页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">G</span>
   </div>
   <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <!-- 功能 -->
   <div onclick="contextMenuAction('toggleBookmark')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
     <i class="fas fa-bookmark" style="width:16px;color:#7c5dfc"></i> 书签 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">B</span>
   </div>
   <div onclick="contextMenuAction('fullscreen')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
     <i class="fas fa-expand-arrows-alt" style="width:16px;color:#7c5dfc"></i> 全屏 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">F</span>
   </div>
+  <div onclick="contextMenuAction('toggleSidebar')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-folder-tree" style="width:16px;color:#7c5dfc"></i> 目录 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">T</span>
+  </div>
   <div onclick="contextMenuAction('search')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
     <i class="fas fa-search" style="width:16px;color:#7c5dfc"></i> 搜索教材 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">/</span>
   </div>
   <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <!-- 快速跳转 -->
+  <div style="padding:8px 16px;color:#8f98c8;font-size:11px;user-select:none;">快速跳转 (数字键)</div>
+  <div onclick="contextMenuAction('jump10')" style="padding:8px 16px;cursor:pointer;color:#d4dbf0;font-size:12px;transition:background .2s;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">第 10 页 <span style="float:right;color:#8f98c8;font-size:10px;">1</span></div>
+  <div onclick="contextMenuAction('jump20')" style="padding:8px 16px;cursor:pointer;color:#d4dbf0;font-size:12px;transition:background .2s;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">第 20 页 <span style="float:right;color:#8f98c8;font-size:10px;">2</span></div>
+  <div onclick="contextMenuAction('jump30')" style="padding:8px 16px;cursor:pointer;color:#d4dbf0;font-size:12px;transition:background .2s;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">第 30 页 <span style="float:right;color:#8f98c8;font-size:10px;">3</span></div>
+  <div onclick="contextMenuAction('jump40')" style="padding:8px 16px;cursor:pointer;color:#d4dbf0;font-size:12px;transition:background .2s;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">第 40 页 <span style="float:right;color:#8f98c8;font-size:10px;">4</span></div>
+  <div onclick="contextMenuAction('jump50')" style="padding:8px 16px;cursor:pointer;color:#d4dbf0;font-size:12px;transition:background .2s;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">第 50 页 <span style="float:right;color:#8f98c8;font-size:10px;">5</span></div>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <!-- 帮助 -->
   <div onclick="contextMenuAction('help')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
     <i class="fas fa-keyboard" style="width:16px;color:#7c5dfc"></i> 快捷键帮助 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">?</span>
-  </div>
-  <div onclick="contextMenuAction('toggleSidebar')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
-    <i class="fas fa-folder-tree" style="width:16px;color:#7c5dfc"></i> 目录
   </div>
 </div>
 
@@ -939,12 +974,36 @@ function toggleSidebar() {
 
 // === Keyboard Shortcuts ===
 function toggleShortcuts() {
+  // 快捷键帮助不需要授权
   document.getElementById('shortcutHint').classList.toggle('show');
+}
+
+// 授权检查辅助函数
+function requireAuth() {
+  const token = localStorage.getItem('ct_token');
+  if (!token) {
+    showToast('⚠️ 请先设置 Token 以使用此功能');
+    showTokenModal();
+    return false;
+  }
+  return true;
 }
 
 document.addEventListener('keydown', (e) => {
   // Ignore when typing in input
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  
+  // 快捷键帮助不需要授权
+  if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+    e.preventDefault();
+    toggleShortcuts();
+    return;
+  }
+  
+  // 所有其他功能需要授权
+  if (!requireAuth()) {
+    return;
+  }
   
   // Ctrl/Cmd 组合键
   if (e.ctrlKey || e.metaKey) {
@@ -1056,9 +1115,16 @@ document.addEventListener('keydown', (e) => {
       document.getElementById('globalSearch').focus(); 
       showToast('搜索教材');
       break;
-    case '?': 
-      e.preventDefault(); 
-      toggleShortcuts(); 
+    case 'g':
+    case 'G':
+      e.preventDefault();
+      // G键：输入页码跳转
+      const pageInputEl = document.getElementById('pageInput');
+      if (pageInputEl) {
+        pageInputEl.focus();
+        pageInputEl.select();
+        showToast('输入页码后按Enter跳转');
+      }
       break;
     case 'Escape':
       if (document.body.classList.contains('fullscreen')) toggleFullscreen();
@@ -1067,17 +1133,6 @@ document.addEventListener('keydown', (e) => {
       // 关闭右键菜单
       const contextMenu = document.getElementById('contextMenu');
       if (contextMenu) contextMenu.style.display = 'none';
-      break;
-    case 'g':
-    case 'G':
-      e.preventDefault();
-      // G键：输入页码跳转
-      const pageInput = document.getElementById('pageInput');
-      if (pageInput) {
-        pageInput.focus();
-        pageInput.select();
-        showToast('输入页码后按Enter跳转');
-      }
       break;
   }
 });
@@ -1202,6 +1257,8 @@ init();
 
 
 
-<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"7f9b4e39-a747-480f-80d1-04ac16c83b21","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"b50c1017-1eac-4a82-abf7-c5ac2993405f","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
+
+
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"6ab985bc-ce9f-47d0-8265-adc9cc690d45","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"693394d8-d139-43e1-bb5b-0772dac45112","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>

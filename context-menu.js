@@ -1,11 +1,29 @@
+// === 授权检查 ===
+function checkAuthorization() {
+  const token = localStorage.getItem('ct_token');
+  if (!token) {
+    showToast('⚠️ 请先设置 Token 以使用此功能');
+    if (typeof showTokenModal === 'function') {
+      showTokenModal();
+    }
+    return false;
+  }
+  return true;
+}
+
 // === 右键菜单功能 ===
 function showContextMenu(x, y) {
+  // 检查授权
+  if (!checkAuthorization()) {
+    return;
+  }
+  
   const menu = document.getElementById('contextMenu');
   if (!menu) return;
   
   // 确保菜单不超出屏幕
-  const menuWidth = 180;
-  const menuHeight = 400;
+  const menuWidth = 200;
+  const menuHeight = 500;
   const finalX = (x + menuWidth > window.innerWidth) ? (window.innerWidth - menuWidth - 10) : x;
   const finalY = (y + menuHeight > window.innerHeight) ? (window.innerHeight - menuHeight - 10) : y;
   
@@ -27,6 +45,11 @@ function contextMenuAction(action) {
   const menu = document.getElementById('contextMenu');
   if (menu) menu.style.display = 'none';
   
+  // 所有操作都需要授权
+  if (!checkAuthorization()) {
+    return;
+  }
+  
   switch(action) {
     case 'zoomIn': 
       if (typeof zoomIn === 'function') zoomIn(); 
@@ -43,6 +66,22 @@ function contextMenuAction(action) {
     case 'nextPage': 
       if (typeof nextPage === 'function') nextPage(); 
       break;
+    case 'firstPage':
+      if (typeof goToPage === 'function') goToPage(1);
+      break;
+    case 'lastPage':
+      if (typeof pdfDoc !== 'undefined' && pdfDoc && typeof goToPage === 'function') {
+        goToPage(pdfDoc.numPages);
+      }
+      break;
+    case 'goToPage':
+      const pageInputEl = document.getElementById('pageInput');
+      if (pageInputEl) {
+        pageInputEl.focus();
+        pageInputEl.select();
+        showToast('输入页码后按Enter跳转');
+      }
+      break;
     case 'toggleBookmark': 
       if (typeof toggleBookmark === 'function') toggleBookmark(); 
       break;
@@ -53,7 +92,7 @@ function contextMenuAction(action) {
       const searchInput = document.getElementById('globalSearch');
       if (searchInput) {
         searchInput.focus();
-        if (typeof showToast === 'function') showToast('开始搜索教材');
+        showToast('开始搜索教材');
       }
       break;
     case 'help': 
@@ -61,6 +100,21 @@ function contextMenuAction(action) {
       break;
     case 'toggleSidebar': 
       if (typeof toggleSidebar === 'function') toggleSidebar(); 
+      break;
+    case 'jump10':
+    case 'jump20':
+    case 'jump30':
+    case 'jump40':
+    case 'jump50':
+      const pageNum = parseInt(action.replace('jump', ''));
+      if (typeof pdfDoc !== 'undefined' && pdfDoc && typeof goToPage === 'function') {
+        if (pageNum <= pdfDoc.numPages) {
+          goToPage(pageNum);
+          showToast(`跳转到第 ${pageNum} 页`);
+        } else {
+          showToast(`第 ${pageNum} 页不存在`);
+        }
+      }
       break;
   }
 }
@@ -88,4 +142,4 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-console.log('✅ 右键菜单功能已加载');
+console.log('✅ 右键菜单功能已加载（需授权）');
