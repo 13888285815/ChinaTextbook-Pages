@@ -163,6 +163,31 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 .mobile-bottom-bar .mb-btn i{font-size:20px;margin-bottom:3px}
 .mobile-bottom-bar .mb-btn span{font-size:10px}
 </style>
+<script>
+// URL.parse polyfill for older browsers (Node.js API not available in browsers)
+if (typeof URL.parse !== 'function') {
+  URL.parse = function(url, base) {
+    try {
+      const parsed = new URL(url, base || window.location.href);
+      return {
+        href: parsed.href,
+        protocol: parsed.protocol,
+        host: parsed.host,
+        hostname: parsed.hostname,
+        port: parsed.port,
+        pathname: parsed.pathname,
+        search: parsed.search,
+        hash: parsed.hash,
+        origin: parsed.origin,
+        query: parsed.search.slice(1) || ''
+      };
+    } catch (e) {
+      console.warn('URL.parse polyfill failed:', e);
+      return null;
+    }
+  };
+}
+</script>
 <script src="context-menu.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
