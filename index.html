@@ -1290,17 +1290,182 @@ function resetHistory() {
 // === Download & Share ===
 function downloadPDF() {
   if (!current) { showToast('请先选择教材'); return; }
-  const link = document.createElement('a');
-  link.href = current.pdf; link.download = `${current.title}`;
-  link.target = '_blank';
-  document.body.appendChild(link); link.click(); document.body.removeChild(link);
-  showToast('已开始下载');
+  
+  const url = current.pdf;
+  const filename = `${current.title}.pdf`;
+  
+  // 老浏览器兼容性检测
+  const isOldBrowser = !('download' in document.createElement('a')) || 
+                       !('fetch' in window) ||
+                       navigator.userAgent.match(/Android 4\.[0-4]/) ||
+                       navigator.userAgent.match(/Safari\/[45]/);
+  
+  if (isOldBrowser) {
+    // 老浏览器：直接在新窗口打开
+    window.open(url, '_blank');
+    showToast('正在打开PDF文件，请长按保存');
+    return;
+  }
+  
+  // 现代浏览器：尝试多种下载方式
+  downloadWithFallback(url, filename);
 }
+
+async function downloadWithFallback(url, filename) {
+  // 方法1：尝试标准 download 属性
+  if (tryStandardDownload(url, filename)) {
+    showToast('已开始下载');
+    return;
+  }
+  
+  // 方法2：尝试 fetch + blob
+  try {
+    const blob = await fetchBlob(url);
+    if (blob) {
+      downloadBlob(blob, filename);
+      showToast('已开始下载');
+      return;
+    }
+  } catch (e) {
+    console.warn('Fetch download failed:', e);
+  }
+  
+  // 方法3：尝试 XHR + blob
+  try {
+    const blob = await fetchBlobWithXHR(url);
+    if (blob) {
+      downloadBlob(blob, filename);
+      showToast('已开始下载');
+      return;
+    }
+  } catch (e) {
+    console.warn('XHR download failed:', e);
+  }
+  
+  // 回退：在新窗口打开
+  window.open(url, '_blank');
+  showToast('请长按PDF页面选择保存');
+}
+
+function tryStandardDownload(url, filename) {
+  try {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.target = '_self';
+    
+    // 添加到DOM
+    document.body.appendChild(link);
+    
+    // 尝试点击
+    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
+    link.dispatchEvent(event);
+    
+    // 延迟移除
+    setTimeout(() => {
+      try { document.body.removeChild(link); } catch(e) {}
+    }, 1000);
+    
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function fetchBlob(url) {
+  const response = await fetch(url, {
+    method: 'GET',
+    mode: 'no-cors',
+    cache: 'default'
+  });
+  
+  if (!response.ok && response.type !== 'opaque') {
+    throw new Error('Fetch failed');
+  }
+  
+  return await response.blob();
+}
+
+function fetchBlobWithXHR(url) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob';
+    
+    xhr.onload = function() {
+      if (xhr.status === 200 || xhr.status === 0) {
+        resolve(xhr.response);
+      } else {
+        reject(new Error('XHR failed'));
+      }
+    };
+    
+    xhr.onerror = function() {
+      reject(new Error('XHR error'));
+    };
+    
+    xhr.ontimeout = function() {
+      reject(new Error('XHR timeout'));
+    };
+    
+    xhr.timeout = 30000;
+    xhr.send();
+  });
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  // 释放URL对象
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
 function shareDocument() {
   if (!current) { showToast('请先选择教材'); return; }
   updateHash();
   const url = window.location.href;
-  navigator.clipboard?.writeText(url).then(() => showToast('已复制分享链接')).catch(() => showToast('无法复制链接'));
+  
+  // 老浏览器兼容性处理
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('已复制分享链接');
+    }).catch(() => {
+      fallbackCopy(url);
+    });
+  } else {
+    fallbackCopy(url);
+  }
+}
+
+function fallbackCopy(text) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.left = '-9999px';
+  document.body.appendChild(textarea);
+  textarea.select();
+  
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      showToast('已复制分享链接');
+    } else {
+      showToast('请手动复制链接');
+      window.prompt('复制链接:', text);
+    }
+  } catch (e) {
+    showToast('请手动复制链接');
+    window.prompt('复制链接:', text);
+  }
+  
+  document.body.removeChild(textarea);
 }
 
 // === URL Hash ===
