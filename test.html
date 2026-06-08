@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>诊断测试</title>
+</head>
+<body>
+<h1>PDF加载诊断</h1>
+<div id="status">正在测试...</div>
+<div id="error" style="color:red;white-space:pre-wrap;"></div>
+<div id="success" style="color:green;"></div>
+
+<script type="module">
+  import * as pdfjsLib from './pdfjs/pdf.mjs';
+  
+  const statusEl = document.getElementById('status');
+  const errorEl = document.getElementById('error');
+  const successEl = document.getElementById('success');
+  
+  statusEl.textContent = 'PDF.js已加载，版本: ' + pdfjsLib.version;
+  
+  // 测试PDF URL
+  const testUrl = 'https://raw.githubusercontent.com/13888285815/ChinaTextbook/master/%E5%88%9D%E4%B8%AD/%E4%BA%BA%E6%96%87%E5%9C%B0%E7%90%86/%E7%BB%9F%E7%BC%96%E7%89%88-%E4%BA%BA%E6%B0%91%E6%95%99%E8%82%B2%E5%87%BA%E7%89%88%E7%A4%BE/%E4%B8%83%E5%B9%B4%E7%BA%A7/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E4%BA%BA%E6%96%87%E5%9C%B0%E7%90%86%E4%B8%8A%E5%86%8C.pdf';
+  
+  pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.mjs';
+  
+  async function testPdfLoad() {
+    try {
+      successEl.textContent = '开始加载PDF...';
+      const pdf = await pdfjsLib.getDocument({
+        url: testUrl,
+        cMapUrl: './pdfjs/cmaps/',
+        cMapPacked: true
+      }).promise;
+      
+      successEl.textContent += '\n✓ PDF加载成功!';
+      successEl.textContent += '\n页数: ' + pdf.numPages;
+      
+      const page = await pdf.getPage(1);
+      successEl.textContent += '\n✓ 第一页加载成功!';
+      successEl.textContent += '\n页面尺寸: ' + page.getViewport({scale: 1}).width + ' x ' + page.getViewport({scale: 1}).height;
+      
+    } catch (err) {
+      errorEl.textContent = '错误详情:\n' + err.stack || err.message;
+      console.error('PDF加载失败:', err);
+    }
+  }
+  
+  testPdfLoad();
+</script>
+</body>
+</html>

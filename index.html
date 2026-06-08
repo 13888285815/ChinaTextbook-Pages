@@ -545,6 +545,13 @@ function filterCatalog(nodes, q) {
 
 // === File Selection ===
 function selectFile(item, labelEl) {
+  console.log('selectFile called with:', item);
+  if (!item || !item.pdf) {
+    showToast('无效的教材文件');
+    console.error('Invalid item:', item);
+    return;
+  }
+  
   current = item;
   document.querySelectorAll('.tree-label.selected').forEach(n => n.classList.remove('selected'));
   if (labelEl) labelEl.classList.add('selected');
@@ -571,17 +578,42 @@ function selectFile(item, labelEl) {
     }
     drawAnnotations();
     highlightActiveThumb();
-  }).catch(() => {});
+  }).catch((err) => {
+    console.error('PDF preview failed:', err);
+    showToast('PDF预览失败: ' + (err.message || '未知错误'));
+  });
 }
 
 // === PDF Preview ===
 async function showPreview(src) {
-  if (!src) return;
+  if (!src) {
+    showToast('PDF地址为空');
+    return;
+  }
+  
+  console.log('Loading PDF from:', src);
   emptyState.style.display = 'none';
   pdfViewer.style.display = 'flex';
   showLoading('正在加载 PDF...');
+  
   try {
-    pdfDoc = await pdfjsLib.getDocument({ url: src, cMapUrl: './pdfjs/cmaps/', cMapPacked: true }).promise;
+    // 验证URL
+    const url = new URL(src);
+    if (!url.protocol.startsWith('http')) {
+      throw new Error('仅支持HTTP/HTTPS协议的PDF文件');
+    }
+    
+    console.log('PDF URL验证通过:', url.href);
+    
+    pdfDoc = await pdfjsLib.getDocument({ 
+      url: src, 
+      cMapUrl: './pdfjs/cmaps/', 
+      cMapPacked: true,
+      withCredentials: false
+    }).promise;
+    
+    console.log('PDF加载成功，页数:', pdfDoc.numPages);
+    
     currentPage = 1;
     const pageCount = pdfDoc.numPages;
     pageTotal.textContent = pageCount;
@@ -591,9 +623,23 @@ async function showPreview(src) {
     hideLoading();
     showToast(`PDF 已加载（${pageCount} 页）`);
   } catch (e) {
-    console.error(e);
+    console.error('PDF加载失败:', e);
     hideLoading();
-    showToast('PDF 加载失败，请检查文件地址');
+    
+    let errorMsg = 'PDF 加载失败';
+    if (e.message) {
+      if (e.message.includes('Missing PDF')) {
+        errorMsg = 'PDF文件不存在或地址错误';
+      } else if (e.message.includes('CORS')) {
+        errorMsg = '跨域访问被拒绝，PDF源站不支持外部访问';
+      } else if (e.message.includes('network')) {
+        errorMsg = '网络错误，请检查网络连接';
+      } else {
+        errorMsg = 'PDF加载失败: ' + e.message;
+      }
+    }
+    
+    showToast(errorMsg);
   }
 }
 function showLoading(text) { loadingText.textContent = text || '加载中...'; loadingOverlay.classList.add('show'); }
@@ -993,6 +1039,8 @@ init();
 
 
 
-<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"e0bf2c59-0cad-45fb-ba0a-411482c84711","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"f55d3324-2dea-4cbf-ab9d-ad3967ec44ad","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
+
+
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"809ec188-9eab-40db-b288-169687b904e5","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"e5edfcac-7a02-4218-86df-2b5ee57c1432","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>
