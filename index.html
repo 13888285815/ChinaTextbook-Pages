@@ -1241,7 +1241,46 @@ async function init() {
   }
 }
 
-init();
+// Global error handler
+window.onerror = function(msg, url, line, col, error) {
+  console.error('全局错误:', {msg, url, line, col, error});
+  showError(`页面错误: ${msg}<br>位置: ${url}:${line}`);
+  return false;
+};
+
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('Promise错误:', e.reason);
+  showError(`异步错误: ${e.reason?.message || e.reason}`);
+});
+
+function showError(msg) {
+  const errorDiv = document.createElement('div');
+  errorDiv.style.cssText = `
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white; padding: 40px; border-radius: 16px;
+    max-width: 600px; z-index: 9999; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    font-family: system-ui; text-align: center;
+  `;
+  errorDiv.innerHTML = `
+    <h2 style="margin: 0 0 20px 0; font-size: 24px;">⚠️ 加载错误</h2>
+    <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: left; font-size: 14px;">
+      ${msg}
+    </div>
+    <button onclick="location.reload()" style="background: white; color: #764ba2; border: none; padding: 12px 30px; border-radius: 8px; font-size: 16px; cursor: pointer; font-weight: bold;">
+      重新加载
+    </button>
+  `;
+  document.body.appendChild(errorDiv);
+}
+
+// Start app with error handling
+try {
+  init();
+} catch(e) {
+  console.error('初始化失败:', e);
+  showError(`初始化失败: ${e.message}<br><br>请刷新页面重试`);
+}
 </script>
 
 
@@ -1262,6 +1301,8 @@ init();
 
 
 
-<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"1e0a3336-ea7a-464d-9763-724e5a0c1a7d","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"be157c09-491c-484a-b596-9b3309ab9d2e","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
+
+
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"64c722f8-df31-4823-b554-24ddf8264a42","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"f326ca89-0cbf-42ca-91a2-ecef1a1e11f2","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>

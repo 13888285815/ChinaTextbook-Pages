@@ -1,54 +1,138 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>诊断测试</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 页面诊断测试</title>
+    <style>
+        body { 
+            font-family: 'Courier New', monospace; 
+            padding: 20px; 
+            background: #1a1a2e; 
+            color: #00ff88; 
+            line-height: 1.6;
+        }
+        h1 { color: #fff; border-bottom: 2px solid #00ff88; padding-bottom: 10px; }
+        .error { color: #ff4757; background: rgba(255,71,87,0.1); padding: 2px 5px; }
+        .success { color: #00ff88; background: rgba(0,255,136,0.1); padding: 2px 5px; }
+        .warn { color: #ffa502; background: rgba(255,165,2,0.1); padding: 2px 5px; }
+        .step { 
+            margin: 10px 0; 
+            padding: 12px; 
+            background: rgba(255,255,255,0.05);
+            border-left: 4px solid #00ff88;
+            border-radius: 4px;
+        }
+        .step.error { border-left-color: #ff4757; }
+        .step.warn { border-left-color: #ffa502; }
+        pre { 
+            background: #0a0a1a; 
+            padding: 10px; 
+            border-radius: 4px; 
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-<h1>PDF加载诊断</h1>
-<div id="status">正在测试...</div>
-<div id="error" style="color:red;white-space:pre-wrap;"></div>
-<div id="success" style="color:green;"></div>
+    <h1>🔍 页面诊断测试</h1>
+    <div id="log"></div>
+    
+    <script>
+        const logEl = document.getElementById('log');
+        let stepCount = 0;
+        
+        function addStep(msg, type = 'info') {
+            stepCount++;
+            const div = document.createElement('div');
+            div.className = `step ${type}`;
+            div.innerHTML = `<strong>${stepCount}.</strong> ${msg}`;
+            logEl.appendChild(div);
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+        
+        function addError(msg) { addStep(msg, 'error'); console.error(msg); }
+        function addSuccess(msg) { addStep(msg, 'success'); }
+        function addWarn(msg) { addStep(msg, 'warn'); }
+        function addInfo(msg) { addStep(msg, 'info'); }
+        
+        // 全局错误捕获
+        window.onerror = (msg, url, line, col, error) => {
+            addError(`JavaScript错误: <pre>${msg}\n位置: ${url}:${line}:${col}\n堆栈: ${error?.stack || 'N/A'}</pre>`);
+        };
+        
+        window.addEventListener('unhandledrejection', e => {
+            addError(`Promise错误: <pre>${e.reason?.stack || e.reason || e}</pre>`);
+        });
+        
+        // 主测试流程
+        window.addEventListener('DOMContentLoaded', async () => {
+            addSuccess('✓ DOM加载完成');
+            
+            // 测试1: catalog.json
+            try {
+                addInfo('检查 catalog.json...');
+                const res = await fetch('catalog.json');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                addSuccess(`✓ catalog.json 加载成功 (${data.length} 条)`);
+                
+                if (data[0]) {
+                    addInfo(`示例: <pre>${JSON.stringify(data[0], null, 2).substring(0, 200)}...</pre>`);
+                }
+            } catch (e) {
+                addError(`catalog.json 失败: ${e.message}`);
+            }
+            
+            // 测试2: context-menu.js
+            try {
+                addInfo('检查 context-menu.js...');
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'context-menu.js';
+                    script.onload = resolve;
+                    script.onerror = () => reject(new Error('加载失败'));
+                    document.body.appendChild(script);
+                });
+                addSuccess('✓ context-menu.js 加载成功');
+            } catch (e) {
+                addError(`context-menu.js 失败: ${e.message}`);
+            }
+            
+            // 测试3: PDF.js
+            try {
+                addInfo('检查 PDF.js...');
+                const pdfjsLib = await import('./pdfjs/pdf.mjs');
+                addSuccess(`✓ PDF.js 加载成功 (v${pdfjsLib.version})`);
+                
+                window.pdfjsLib = pdfjsLib;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.mjs';
+                
+                // 测试PDF加载
+                addInfo('测试PDF加载...');
+                const testUrl = 'https://raw.githubusercontent.com/13888285815/ChinaTextbook/master/%E5%88%9D%E4%B8%AD/%E4%BA%BA%E6%96%87%E5%9C%B0%E7%90%86/%E7%BB%9F%E7%BC%96%E7%89%88-%E4%BA%BA%E6%B0%91%E6%95%99%E8%82%B2%E5%87%BA%E7%89%88%E7%A4%BE/%E4%B8%83%E5%B9%B4%E7%BA%A7/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E4%BA%BA%E6%96%87%E5%9C%B0%E7%90%86%E4%B8%8A%E5%86%8C.pdf';
+                
+                const pdf = await pdfjsLib.getDocument({ url: testUrl }).promise;
+                addSuccess(`✓ PDF加载成功 (${pdf.numPages} 页)`);
+            } catch (e) {
+                addError(`PDF.js 失败: <pre>${e.stack || e.message}</pre>`);
+            }
+            
+            // 测试4: 检查关键函数
+            addInfo('检查关键函数...');
+            const funcs = ['init', 'renderTree', 'onSearch', 'toggleSidebar'];
+            funcs.forEach(fn => {
+                if (typeof window[fn] === 'function') {
+                    addSuccess(`✓ ${fn}() 存在`);
+                } else {
+                    addWarn(`⚠ ${fn}() 未找到`);
+                }
+            });
+            
+            addInfo('✓ 诊断完成');
+        });
+    </script>
 
-<script type="module">
-  import * as pdfjsLib from './pdfjs/pdf.mjs';
-  
-  const statusEl = document.getElementById('status');
-  const errorEl = document.getElementById('error');
-  const successEl = document.getElementById('success');
-  
-  statusEl.textContent = 'PDF.js已加载，版本: ' + pdfjsLib.version;
-  
-  // 测试PDF URL
-  const testUrl = 'https://raw.githubusercontent.com/13888285815/ChinaTextbook/master/%E5%88%9D%E4%B8%AD/%E4%BA%BA%E6%96%87%E5%9C%B0%E7%90%86/%E7%BB%9F%E7%BC%96%E7%89%88-%E4%BA%BA%E6%B0%91%E6%95%99%E8%82%B2%E5%87%BA%E7%89%88%E7%A4%BE/%E4%B8%83%E5%B9%B4%E7%BA%A7/%E4%B9%89%E5%8A%A1%E6%95%99%E8%82%B2%E6%95%99%E7%A7%91%E4%B9%A6%C2%B7%E4%BA%BA%E6%96%87%E5%9C%B0%E7%90%86%E4%B8%8A%E5%86%8C.pdf';
-  
-  pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.mjs';
-  
-  async function testPdfLoad() {
-    try {
-      successEl.textContent = '开始加载PDF...';
-      const pdf = await pdfjsLib.getDocument({
-        url: testUrl,
-        cMapUrl: './pdfjs/cmaps/',
-        cMapPacked: true
-      }).promise;
-      
-      successEl.textContent += '\n✓ PDF加载成功!';
-      successEl.textContent += '\n页数: ' + pdf.numPages;
-      
-      const page = await pdf.getPage(1);
-      successEl.textContent += '\n✓ 第一页加载成功!';
-      successEl.textContent += '\n页面尺寸: ' + page.getViewport({scale: 1}).width + ' x ' + page.getViewport({scale: 1}).height;
-      
-    } catch (err) {
-      errorEl.textContent = '错误详情:\n' + err.stack || err.message;
-      console.error('PDF加载失败:', err);
-    }
-  }
-  
-  testPdfLoad();
-</script>
-
-<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"fadf25e6-2fde-4c7c-8f46-7238ceb84da3","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"61117a2c-4d4e-45cd-99f8-7b5248f4006c","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"5a3adeba-9602-4369-afbf-c035236c717a","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"c8b011a9-393c-47a0-bbea-ba19e9925f26","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>
