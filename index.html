@@ -149,7 +149,9 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 .sidebar-float-toggle:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(124,93,252,.5)}
 .sidebar-float-toggle.hide{display:none}
 @media(min-width:761px){.sidebar-float-toggle{display:none}}
-</style>
+
+</script>
+<script src="context-menu.js"></script>
 <script type="module">
   import * as pdfjsLib from './pdfjs/pdf.mjs';
   window.pdfjsLib = pdfjsLib;
@@ -285,6 +287,43 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
   <div><span>退出全屏</span><kbd>Esc</kbd></div>
 </div>
 <button class="sidebar-float-toggle" id="sidebarFloatToggle" onclick="toggleSidebar()" title="打开目录"><i class="fas fa-folder-tree"></i></button>
+
+<!-- 右键菜单 -->
+<div id="contextMenu" style="position:fixed;display:none;z-index:9999;min-width:180px;background:rgba(20,30,60,.98);border:1px solid rgba(255,255,255,.1);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);backdrop-filter:blur(12px);padding:8px 0;">
+  <div onclick="contextMenuAction('zoomIn')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-search-plus" style="width:16px;color:#7c5dfc"></i> 放大 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">+</span>
+  </div>
+  <div onclick="contextMenuAction('zoomOut')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-search-minus" style="width:16px;color:#7c5dfc"></i> 缩小 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">-</span>
+  </div>
+  <div onclick="contextMenuAction('zoomFit')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-expand" style="width:16px;color:#7c5dfc"></i> 适应宽度 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">0</span>
+  </div>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <div onclick="contextMenuAction('prevPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-chevron-left" style="width:16px;color:#7c5dfc"></i> 上一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">←</span>
+  </div>
+  <div onclick="contextMenuAction('nextPage')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-chevron-right" style="width:16px;color:#7c5dfc"></i> 下一页 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">→</span>
+  </div>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <div onclick="contextMenuAction('toggleBookmark')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-bookmark" style="width:16px;color:#7c5dfc"></i> 书签 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">B</span>
+  </div>
+  <div onclick="contextMenuAction('fullscreen')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-expand-arrows-alt" style="width:16px;color:#7c5dfc"></i> 全屏 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">F</span>
+  </div>
+  <div onclick="contextMenuAction('search')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-search" style="width:16px;color:#7c5dfc"></i> 搜索教材 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">/</span>
+  </div>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin:4px 16px;"></div>
+  <div onclick="contextMenuAction('help')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-keyboard" style="width:16px;color:#7c5dfc"></i> 快捷键帮助 <span style="margin-left:auto;color:#8f98c8;font-size:11px;">?</span>
+  </div>
+  <div onclick="contextMenuAction('toggleSidebar')" style="padding:10px 16px;cursor:pointer;color:#d4dbf0;font-size:13px;transition:background .2s;display:flex;align-items:center;gap:10px;" onmouseover="this.style.background='rgba(124,93,252,.2)'" onmouseout="this.style.background='transparent'">
+    <i class="fas fa-folder-tree" style="width:16px;color:#7c5dfc"></i> 目录
+  </div>
+</div>
 
 <script>
 // === State ===
@@ -902,23 +941,143 @@ function toggleSidebar() {
 function toggleShortcuts() {
   document.getElementById('shortcutHint').classList.toggle('show');
 }
+
 document.addEventListener('keydown', (e) => {
   // Ignore when typing in input
   if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  
+  // Ctrl/Cmd 组合键
+  if (e.ctrlKey || e.metaKey) {
+    switch(e.key) {
+      case 'f':
+      case 'F':
+        e.preventDefault();
+        document.getElementById('globalSearch').focus();
+        showToast('搜索教材');
+        break;
+      case 'b':
+      case 'B':
+        e.preventDefault();
+        toggleBookmark();
+        break;
+      case 't':
+      case 'T':
+        e.preventDefault();
+        toggleSidebar();
+        break;
+      case 'm':
+      case 'M':
+        e.preventDefault();
+        toggleFullscreen();
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        goToPage(1); // 跳到第一页
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        goToPage(pdfDoc ? pdfDoc.numPages : 1); // 跳到最后一页
+        break;
+    }
+    return;
+  }
+  
+  // 普通快捷键
   switch (e.key) {
-    case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevPage(); break;
-    case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextPage(); break;
-    case '+': case '=': e.preventDefault(); zoomIn(); break;
-    case '-': case '_': e.preventDefault(); zoomOut(); break;
-    case '0': e.preventDefault(); zoomFit(); break;
-    case 'f': case 'F': e.preventDefault(); toggleFullscreen(); break;
-    case 'b': case 'B': e.preventDefault(); toggleBookmark(); break;
-    case '/': e.preventDefault(); document.getElementById('globalSearch').focus(); break;
-    case '?': e.preventDefault(); toggleShortcuts(); break;
+    case 'ArrowLeft': 
+    case 'ArrowUp': 
+    case 'PageUp':
+      e.preventDefault(); 
+      prevPage(); 
+      break;
+    case 'ArrowRight': 
+    case 'ArrowDown': 
+    case 'PageDown':
+    case ' ': // 空格键
+      e.preventDefault(); 
+      nextPage(); 
+      break;
+    case 'Home':
+      e.preventDefault();
+      goToPage(1);
+      break;
+    case 'End':
+      e.preventDefault();
+      if (pdfDoc) goToPage(pdfDoc.numPages);
+      break;
+    case '+': 
+    case '=': 
+      e.preventDefault(); 
+      zoomIn(); 
+      break;
+    case '-': 
+    case '_': 
+      e.preventDefault(); 
+      zoomOut(); 
+      break;
+    case '0': 
+      e.preventDefault(); 
+      zoomFit(); 
+      break;
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      e.preventDefault();
+      // 数字键快速跳转页码（按数字n跳转到第n*10页）
+      const targetPage = parseInt(e.key) * 10;
+      if (pdfDoc && targetPage <= pdfDoc.numPages) {
+        goToPage(targetPage);
+        showToast(`跳转到第 ${targetPage} 页`);
+      }
+      break;
+    case 'f': 
+    case 'F': 
+      e.preventDefault(); 
+      toggleFullscreen(); 
+      break;
+    case 'b': 
+    case 'B': 
+      e.preventDefault(); 
+      toggleBookmark(); 
+      break;
+    case 't':
+    case 'T':
+      e.preventDefault();
+      toggleSidebar();
+      break;
+    case '/': 
+      e.preventDefault(); 
+      document.getElementById('globalSearch').focus(); 
+      showToast('搜索教材');
+      break;
+    case '?': 
+      e.preventDefault(); 
+      toggleShortcuts(); 
+      break;
     case 'Escape':
       if (document.body.classList.contains('fullscreen')) toggleFullscreen();
       document.getElementById('shortcutHint').classList.remove('show');
       closeModal();
+      // 关闭右键菜单
+      const contextMenu = document.getElementById('contextMenu');
+      if (contextMenu) contextMenu.style.display = 'none';
+      break;
+    case 'g':
+    case 'G':
+      e.preventDefault();
+      // G键：输入页码跳转
+      const pageInput = document.getElementById('pageInput');
+      if (pageInput) {
+        pageInput.focus();
+        pageInput.select();
+        showToast('输入页码后按Enter跳转');
+      }
       break;
   }
 });
@@ -1041,6 +1200,8 @@ init();
 
 
 
-<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"809ec188-9eab-40db-b288-169687b904e5","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"e5edfcac-7a02-4218-86df-2b5ee57c1432","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
+
+
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"7f9b4e39-a747-480f-80d1-04ac16c83b21","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"b50c1017-1eac-4a82-abf7-c5ac2993405f","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>
