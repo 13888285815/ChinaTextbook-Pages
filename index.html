@@ -38,23 +38,22 @@ button,input{font:inherit}
 
 /* Windows资源管理器风格树形结构 */
 .tree-node{position:relative;margin:1px 0}
-.tree-label{display:flex;align-items:center;gap:6px;padding:7px 10px 7px 16px;cursor:pointer;transition:background .2s,color .2s;color:#d4dbf0;position:relative;font-size:13px;border-radius:8px;user-select:none}
-.tree-label:hover{background:rgba(255,255,255,.08);color:#fff}
-.tree-label.active{color:#fff;background:rgba(124,93,252,.22)}
-.tree-label.selected{color:#fff;background:rgba(124,93,252,.35)}
+.tree-label{display:flex;align-items:center;gap:8px;padding:10px 12px;color:#c7d1f4;cursor:pointer;transition:background .2s,color .2s;border-radius:10px;margin:2px 6px;font-size:14px;user-select:none;position:relative}
+.tree-label:hover{background:rgba(124,93,252,.12);color:#fff}
+.tree-label.active,.tree-label.selected{color:#fff;background:rgba(124,93,252,.35)}
 
 .tree-arrow{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:#a8b4d8;transition:transform .2s;font-size:9px;flex-shrink:0}
 .tree-arrow.rotated{transform:rotate(90deg)}
 .tree-arrow.empty{visibility:hidden}
 
-.tree-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tree-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
 .tree-icon.folder{color:#ffd166}
 .tree-icon.file{color:#7c5dfc}
 .tree-icon.level-1{color:#ffd166}
 .tree-icon.level-2{color:#6bb3ff}
 .tree-icon.level-3{color:#8f9cf5}
 
-.tree-name{flex:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;line-height:1.4}
+.tree-name{flex:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;line-height:1.4;font-size:14px}
 
 .tree-count{font-size:11px;color:#8f98c8;background:rgba(255,255,255,.08);padding:2px 7px;border-radius:10px;flex-shrink:0}
 
@@ -101,12 +100,14 @@ button,input{font:inherit}
 .page-info{display:flex;align-items:center;gap:8px;margin-left:auto;color:#9fb4d8;font-size:12px;flex-shrink:0}
 .page-info input{width:50px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(18,28,61,.95);color:#f4f6ff;outline:none;text-align:center}
 /* PDF Viewer Body */
-.preview-body{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden}
+.preview-body{flex:1;display:flex;align-items:flex-start;justify-content:center;padding:24px;position:relative;overflow:auto;-webkit-overflow-scrolling:touch}
 .preview-body::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(124,93,252,.16),transparent 32%),radial-gradient(circle at bottom left,rgba(49,90,255,.12),transparent 28%);pointer-events:none}
-.pdf-viewer{position:relative;display:flex;align-items:flex-start;justify-content:center;overflow:auto;width:100%;height:100%}
-.pdf-canvas-wrap{position:relative;flex-shrink:0}
-.pdf-canvas-wrap canvas{display:block}
+.pdf-viewer{position:relative;display:flex;align-items:flex-start;justify-content:center;overflow:auto;width:100%;height:100%;touch-action:pan-y pinch-zoom;-webkit-overflow-scrolling:touch}
+.pdf-canvas-wrap{position:relative;flex-shrink:0;transform-origin:top left}
+.pdf-canvas-wrap canvas{display:block;max-width:none}
 .annotation-canvas{position:absolute;left:0;top:0;touch-action:none}
+/* Mobile touch scroll container */
+.touch-scroll-container{width:100%;height:100%;overflow:auto;-webkit-overflow-scrolling:touch}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#8f9ecb;gap:10px;text-align:center;padding:0 18px}
 .empty-state i{font-size:60px;opacity:.38}
 /* Loading Overlay */
@@ -148,27 +149,35 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 /* Responsive */
 @media(max-width:1180px){.main{flex-direction:column}.sidebar,.thumb-panel{width:100%;min-width:auto}.preview-area{margin-right:0;border-radius:0}.splitter-v{display:none}}
 @media(max-width:980px){.thumb-panel{display:none}.preview-area{margin-left:0}.sidebar{height:260px;min-height:220px;overflow:auto}.preview-body{padding:16px}}
-@media(max-width:760px){.menu-toggle{display:flex}.top-bar{padding:0 12px;gap:10px}.top-bar .logo span{display:none}.search-global{order:10;width:100%;max-width:none}.top-bar{flex-wrap:wrap}.preview-toolbar{gap:6px;padding:0 10px;height:48px}.tbtn{width:34px;height:34px;border-radius:10px}.page-info{margin-left:0}.preview-body{padding:8px}.status-bar{flex-wrap:wrap;gap:10px;height:auto;padding:12px}.sidebar{position:fixed;left:0;top:56px;bottom:0;width:100%;max-width:340px;z-index:200;margin-left:0;transform:translateX(-100%);transition:transform .3s ease;box-shadow:8px 0 30px rgba(0,0,0,.3)}.sidebar.mobile-open{transform:translateX(0)}.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199}.sidebar-backdrop.show{display:block}.sidebar .tree-wrap{height:calc(100vh - 180px);overflow:auto}.tree-label{padding:12px 14px !important;min-height:44px}.tree-arrow{width:24px;height:24px;font-size:14px}.tree-icon{width:22px;height:22px;font-size:16px}.tree-name{font-size:15px;line-height:1.5}.tree-count{font-size:12px;padding:3px 10px}.tree-children::before{left:26px}}
-@media(max-width:480px){.sidebar{max-width:100%;width:100%}.tree-label{padding:14px 16px !important}.tree-arrow{width:28px;height:28px}.tree-icon{width:24px;height:24px;font-size:18px}.tree-name{font-size:16px}.tree-children::before{left:30px}}
+@media(max-width:760px){.menu-toggle{display:flex;width:40px;height:40px}.top-bar{padding:0 8px;gap:8px;flex-wrap:wrap;min-height:92px;align-items:center}.top-bar .logo{flex:1;min-width:150px}.top-bar .logo span{display:none}.search-global{order:10;width:100%;max-width:none;margin-top:4px}.preview-toolbar{gap:2px;padding:0 6px;height:42px;position:fixed;top:92px;left:0;right:0;z-index:50;background:rgba(12,20,49,.98);border-bottom:1px solid rgba(255,255,255,.06);align-items:center}.tbtn{width:30px;height:30px;border-radius:8px;font-size:13px}.page-info{margin-left:0;font-size:10px;gap:4px}.page-info input{width:36px;padding:4px;font-size:10px}.preview-body{padding:4px;padding-top:134px;padding-bottom:70px;overflow:auto;-webkit-overflow-scrolling:touch}.status-bar{display:none}.sidebar{position:fixed;left:0;top:92px;bottom:70px;width:100%;max-width:360px;z-index:200;margin-left:0;transform:translateX(-100%);transition:transform .3s ease;box-shadow:8px 0 30px rgba(0,0,0,.3)}.sidebar.mobile-open{transform:translateX(0)}.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199}.sidebar-backdrop.show{display:block}.sidebar .tree-wrap{height:calc(100vh - 250px);overflow:auto}.tree-label{padding:12px 14px !important;min-height:44px}.tree-arrow{width:24px;height:24px;font-size:14px}.tree-icon{width:22px;height:22px;font-size:16px}.tree-name{font-size:15px;line-height:1.5}.tree-count{font-size:12px;padding:3px 10px}.tree-children::before{left:26px}.mobile-bottom-bar{display:flex}}
+@media(max-width:480px){.sidebar{max-width:100%;width:100%}.tree-label{padding:14px 16px !important}.tree-arrow{width:28px;height:28px}.tree-icon{width:24px;height:24px;font-size:18px}.tree-name{font-size:16px}.tree-children::before{left:30px}.preview-toolbar{gap:3px}.tbtn{width:30px;height:30px}}
 /* Floating sidebar toggle - always visible */
 .sidebar-float-toggle{position:fixed;left:12px;bottom:60px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#7c5dfc,#5b3de8);color:#fff;border:none;box-shadow:0 8px 24px rgba(124,93,252,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:250;font-size:18px;transition:transform .2s,box-shadow .2s}
 .sidebar-float-toggle:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(124,93,252,.5)}
 .sidebar-float-toggle.hide{display:none}
 @media(min-width:761px){.sidebar-float-toggle{display:none}}
+/* Mobile Bottom Bar */
+.mobile-bottom-bar{position:fixed;bottom:0;left:0;right:0;height:60px;background:rgba(12,20,49,.98);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-around;z-index:100;padding:0 16px;display:none}
+.mobile-bottom-bar .mb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:60px;height:50px;color:#9fb4d8;cursor:pointer;transition:all .2s}
+.mobile-bottom-bar .mb-btn:hover,.mobile-bottom-bar .mb-btn.active{color:#7c5dfc}
+.mobile-bottom-bar .mb-btn i{font-size:20px;margin-bottom:3px}
+.mobile-bottom-bar .mb-btn span{font-size:10px}
 </style>
 <script src="context-menu.js"></script>
-<script type="module">
-  import * as pdfjsLib from './pdfjs/pdf.mjs';
-  window.pdfjsLib = pdfjsLib;
-  pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/pdf.worker.mjs';
-  // Fallback: if worker fails, use main thread (slower but functional)
-  pdfjsLib.GlobalWorkerOptions.workerPort = null;
-  window.addEventListener('error', function(e) {
-    if (e.message && e.message.includes('worker')) {
-      console.warn('PDF.js worker 加载失败，切换到主线程渲染');
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // PDF.js configuration
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+  // Mobile fallback: disable worker for older browsers
+  if ('ontouchstart' in window || navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
+    try {
       pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    } catch(e) {
+      console.warn('PDF.js worker disabled for mobile');
     }
-  });
+  }
 </script>
 </head>
 <body>
@@ -295,6 +304,14 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
     <span id="statusBookmark"></span>
     <span style="margin-left:auto" id="statusToken">免费用户</span>
   </footer>
+  <!-- Mobile Bottom Bar -->
+  <div class="mobile-bottom-bar" id="mobileBottomBar">
+    <div class="mb-btn" onclick="toggleSidebar()" title="目录"><i class="fas fa-folder-tree"></i><span>目录</span></div>
+    <div class="mb-btn" onclick="zoomOut()" title="缩小"><i class="fas fa-search-minus"></i><span>缩小</span></div>
+    <div class="mb-btn" onclick="zoomFit()" title="适应"><i class="fas fa-expand"></i><span>适应</span></div>
+    <div class="mb-btn" onclick="zoomIn()" title="放大"><i class="fas fa-search-plus"></i><span>放大</span></div>
+    <div class="mb-btn" onclick="toggleBookmark()" title="书签"><i class="fas fa-bookmark"></i><span>书签</span></div>
+  </div>
 </div>
 <div class="modal-bg" id="tokenModal">
   <div class="modal-box">
@@ -698,24 +715,45 @@ async function showPreview(src) {
   
   console.log('Loading PDF from:', src);
   emptyState.style.display = 'none';
-  pdfViewer.style.display = 'flex';
+  pdfViewer.style.display = 'block';
   showLoading('正在加载 PDF...');
+  
+  // 移动端适配：重置缩放
+  if ('ontouchstart' in window) {
+    pdfScale = 1.0;
+  }
   
   try {
     // 验证URL
-    const url = new URL(src);
+    let url;
+    try {
+      url = new URL(src);
+    } catch (e) {
+      throw new Error('无效的PDF地址');
+    }
+    
     if (!url.protocol.startsWith('http')) {
       throw new Error('仅支持HTTP/HTTPS协议的PDF文件');
     }
     
     console.log('PDF URL验证通过:', url.href);
     
-    pdfDoc = await pdfjsLib.getDocument({ 
+    // 移动端配置优化
+    const pdfConfig = { 
       url: src, 
       cMapUrl: './pdfjs/cmaps/', 
       cMapPacked: true,
-      withCredentials: false
-    }).promise;
+      withCredentials: false,
+      disableFontFace: true,
+      useSystemFonts: true
+    };
+    
+    // 移动端禁用worker以提高兼容性
+    if ('ontouchstart' in window || navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
+      pdfConfig.workerSrc = '';
+    }
+    
+    pdfDoc = await pdfjsLib.getDocument(pdfConfig).promise;
     
     console.log('PDF加载成功，页数:', pdfDoc.numPages);
     
@@ -723,7 +761,12 @@ async function showPreview(src) {
     const pageCount = pdfDoc.numPages;
     pageTotal.textContent = pageCount;
     pageInput.max = pageCount;
-    populateThumbs(pageCount);
+    
+    // 移动端延迟加载缩略图以节省内存
+    if (!('ontouchstart' in window)) {
+      populateThumbs(pageCount);
+    }
+    
     await renderPage(1);
     hideLoading();
     showToast(`PDF 已加载（${pageCount} 页）`);
@@ -733,18 +776,22 @@ async function showPreview(src) {
     
     let errorMsg = 'PDF 加载失败';
     if (e.message) {
-      if (e.message.includes('Missing PDF')) {
+      if (e.message.includes('Missing PDF') || e.message.includes('404')) {
         errorMsg = 'PDF文件不存在或地址错误';
-      } else if (e.message.includes('CORS')) {
-        errorMsg = '跨域访问被拒绝，PDF源站不支持外部访问';
-      } else if (e.message.includes('network')) {
+      } else if (e.message.includes('CORS') || e.message.includes('Access-Control')) {
+        errorMsg = '跨域访问被拒绝';
+      } else if (e.message.includes('network') || e.message.includes('fetch') || e.message.includes('request')) {
         errorMsg = '网络错误，请检查网络连接';
+      } else if (e.message.includes('Unexpected server response')) {
+        errorMsg = '服务器响应异常，请稍后重试';
       } else {
         errorMsg = 'PDF加载失败: ' + e.message;
       }
     }
     
     showToast(errorMsg);
+    pdfViewer.style.display = 'none';
+    emptyState.style.display = 'flex';
   }
 }
 function showLoading(text) { loadingText.textContent = text || '加载中...'; loadingOverlay.classList.add('show'); }
@@ -979,6 +1026,198 @@ function handlePointerUp() {
   annotationActions.push(currentStroke); historyStack.push(currentStroke); futureStack = [];
   saveAnnotations(); currentStroke = null;
 }
+
+// === Mobile Touch Gestures ===
+let touchStartY = 0;
+let touchStartX = 0;
+let touchStartTime = 0;
+let lastTouchDistance = 0;
+let isTwoFinger = false;
+let isPanning = false;
+let panStartX = 0;
+let panStartY = 0;
+let lastPanX = 0;
+let lastPanY = 0;
+let pdfTranslateX = 0;
+let pdfTranslateY = 0;
+
+function initTouchGestures() {
+  const viewer = document.getElementById('previewBody');
+  if (!viewer) return;
+  
+  viewer.addEventListener('touchstart', handleTouchStart, { passive: false });
+  viewer.addEventListener('touchmove', handleTouchMove, { passive: false });
+  viewer.addEventListener('touchend', handleTouchEnd, { passive: false });
+}
+
+function handleTouchStart(e) {
+  if (activeTool) return;
+  
+  touchStartTime = Date.now();
+  
+  if (e.touches.length === 1) {
+    touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
+    panStartX = e.touches[0].clientX - pdfTranslateX;
+    panStartY = e.touches[0].clientY - pdfTranslateY;
+    isTwoFinger = false;
+    isPanning = false;
+  } else if (e.touches.length === 2) {
+    isTwoFinger = true;
+    isPanning = false;
+    lastTouchDistance = getTouchDistance(e.touches[0], e.touches[1]);
+  }
+}
+
+function handleTouchMove(e) {
+  if (activeTool) return;
+  
+  if (e.touches.length === 2 && pdfDoc) {
+    e.preventDefault();
+    const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+    const scaleDiff = currentDistance / lastTouchDistance;
+    const newScale = Math.min(5, Math.max(0.3, pdfScale * scaleDiff));
+    
+    // 计算缩放中心点
+    const touchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    const touchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    
+    // 调整平移以保持缩放中心点不变
+    const scaleChange = newScale / pdfScale;
+    pdfTranslateX = touchCenterX - (touchCenterX - pdfTranslateX) * scaleChange;
+    pdfTranslateY = touchCenterY - (touchCenterY - pdfTranslateY) * scaleChange;
+    
+    pdfScale = newScale;
+    lastTouchDistance = currentDistance;
+    updatePdfTransform();
+  } else if (e.touches.length === 1 && pdfDoc && pdfScale > 1) {
+    e.preventDefault();
+    isPanning = true;
+    pdfTranslateX = e.touches[0].clientX - panStartX;
+    pdfTranslateY = e.touches[0].clientY - panStartY;
+    updatePdfTransform();
+  }
+}
+
+function handleTouchEnd(e) {
+  if (activeTool) return;
+  
+  if (isTwoFinger) {
+    isTwoFinger = false;
+    return;
+  }
+  
+  if (isPanning && pdfScale > 1) {
+    isPanning = false;
+    // 限制平移边界
+    constrainPan();
+    return;
+  }
+  
+  const touchEndY = e.changedTouches[0]?.clientY || 0;
+  const touchEndX = e.changedTouches[0]?.clientX || 0;
+  const deltaY = touchStartY - touchEndY;
+  const deltaX = touchStartX - touchEndX;
+  const touchDuration = Date.now() - touchStartTime;
+  const minSwipeDistance = 40;
+  const maxSwipeDuration = 500;
+  
+  // 检查是否为快速滑动
+  if (touchDuration < maxSwipeDuration && Math.abs(deltaY) > minSwipeDistance && Math.abs(deltaX) > minSwipeDistance) {
+    // 对角线滑动，判断主要方向
+    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
+      handleVerticalSwipe(deltaY);
+    } else if (Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+      handleHorizontalSwipe(deltaX);
+    }
+  } else if (touchDuration < maxSwipeDuration && Math.abs(deltaY) > minSwipeDistance) {
+    handleVerticalSwipe(deltaY);
+  } else if (touchDuration < maxSwipeDuration && Math.abs(deltaX) > minSwipeDistance) {
+    handleHorizontalSwipe(deltaX);
+  }
+}
+
+function handleVerticalSwipe(deltaY) {
+  if (!pdfDoc) return;
+  
+  // 上滑（手指从下往上）- 翻到下一页或首页
+  if (deltaY > 0) {
+    if (currentPage < pdfDoc.numPages) {
+      nextPage();
+      showToast(`第 ${currentPage} 页`);
+    } else {
+      showToast('已经是最后一页');
+    }
+  } else {
+    // 下滑（手指从上往下）- 翻到上一页或首页
+    if (currentPage > 1) {
+      prevPage();
+      showToast(`第 ${currentPage} 页`);
+    } else {
+      showToast('已经是第一页');
+    }
+  }
+}
+
+function handleHorizontalSwipe(deltaX) {
+  if (!pdfDoc) return;
+  
+  // 右滑（手指从左往右）- 翻到下一页
+  if (deltaX > 0) {
+    if (currentPage < pdfDoc.numPages) {
+      nextPage();
+      showToast(`第 ${currentPage} 页`);
+    } else {
+      showToast('已经是最后一页');
+    }
+  } else {
+    // 左滑（手指从右往左）- 翻到上一页
+    if (currentPage > 1) {
+      prevPage();
+      showToast(`第 ${currentPage} 页`);
+    } else {
+      showToast('已经是第一页');
+    }
+  }
+}
+
+function updatePdfTransform() {
+  if (!pdfCanvasWrap) return;
+  pdfCanvasWrap.style.transform = `translate(${pdfTranslateX}px, ${pdfTranslateY}px) scale(${pdfScale})`;
+}
+
+function constrainPan() {
+  if (!pdfDoc || pdfScale <= 1) {
+    pdfTranslateX = 0;
+    pdfTranslateY = 0;
+    updatePdfTransform();
+    return;
+  }
+  
+  const wrap = document.getElementById('pdfCanvasWrap');
+  const viewer = document.getElementById('pdfViewer');
+  if (!wrap || !viewer) return;
+  
+  const contentWidth = wrap.offsetWidth * pdfScale;
+  const contentHeight = wrap.offsetHeight * pdfScale;
+  const viewerWidth = viewer.offsetWidth;
+  const viewerHeight = viewer.offsetHeight;
+  
+  const maxX = Math.max(0, (contentWidth - viewerWidth) / 2);
+  const maxY = Math.max(0, (contentHeight - viewerHeight) / 2);
+  
+  pdfTranslateX = Math.max(-maxX, Math.min(maxX, pdfTranslateX));
+  pdfTranslateY = Math.max(-maxY, Math.min(maxY, pdfTranslateY));
+  
+  updatePdfTransform();
+}
+
+function getTouchDistance(touch1, touch2) {
+  const dx = touch2.clientX - touch1.clientX;
+  const dy = touch2.clientY - touch1.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
 function drawAnnotations() {
   annCtx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
   const actions = annotationActions.filter(a => !a.page || a.page === currentPage).concat(currentStroke ? [currentStroke] : []);
@@ -1278,6 +1517,7 @@ async function init() {
   }
   enableSplitters();
   attachAnnotationEvents();
+  initTouchGestures();
 
   // Handle ?file= parameter (from main site redirect)
   const params = new URLSearchParams(window.location.search);
