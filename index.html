@@ -598,6 +598,7 @@ window.addEventListener('load', () => {
       pdfjsLib.disableWorker = true;
     }
   }
+});
 </script>
 </head>
 <body>
@@ -1049,17 +1050,20 @@ function flattenCount(list) {
 
 // === Catalog Loading & Search ===
 async function loadCatalog() {
+  console.log('loadCatalog: 开始加载目录...');
   catalogCount.textContent = '加载中...';
   try {
     const res = await fetch('catalog.json');
+    console.log('loadCatalog: fetch响应状态:', res.status);
     if (!res.ok) throw new Error('目录加载失败');
     catalog = await res.json();
+    console.log('loadCatalog: 目录数据加载成功，条目数:', catalog.length);
     renderTree(catalog);
     showToast(`已加载 ${flattenCount(catalog)} 套教材目录`);
   } catch (e) {
-    console.error(e);
+    console.error('loadCatalog错误:', e);
     catalogCount.textContent = '加载失败';
-    showToast('教材目录加载失败');
+    showToast('教材目录加载失败: ' + e.message);
     renderTree([]);
   }
 }
@@ -1592,6 +1596,8 @@ function handleTouchEnd(e) {
       } else {
         prevPage();
       }
+    }
+  }
 }
 
 function firstPage() {
