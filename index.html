@@ -7,11 +7,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(145deg,#0f1639 0%,#121e54 40%,#161a3c 100%);min-height:100vh;color:#e6e8f5}
-button, input{font:inherit}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(145deg,#0f1639 0%,#121e54 40%,#161a3c 100%);min-height:100vh;color:#e6e8f5;overflow:hidden}
+button,input{font:inherit}
 .container{display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.top-bar{height:56px;background:rgba(12,21,55,.92);backdrop-filter:blur(12px);display:flex;align-items:center;padding:0 22px;gap:16px;box-shadow:0 15px 40px rgba(0,0,0,.18)}
-.top-bar .logo{display:flex;align-items:center;gap:10px;color:#f8f9fc;font-size:18px;font-weight:700}
+/* Top Bar */
+.top-bar{height:56px;background:rgba(12,21,55,.92);backdrop-filter:blur(12px);display:flex;align-items:center;padding:0 22px;gap:16px;box-shadow:0 15px 40px rgba(0,0,0,.18);z-index:100;transition:transform .3s}
+.top-bar .logo{display:flex;align-items:center;gap:10px;color:#f8f9fc;font-size:18px;font-weight:700;white-space:nowrap}
 .top-bar .logo span{color:#8f98c8;font-size:13px;font-weight:400}
 .search-global{position:relative;flex:1;max-width:420px}
 .search-global input{width:100%;padding:10px 14px 10px 38px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(18,29,70,.95);color:#f4f6ff;outline:none;transition:border .2s,box-shadow .2s}
@@ -19,8 +20,11 @@ button, input{font:inherit}
 .search-global i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#8f98c8}
 .user-area{display:flex;align-items:center;gap:10px}
 .user-area .avatar{width:34px;height:34px;border-radius:50%;background:#7c5dfc;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;box-shadow:0 8px 20px rgba(124,93,252,.25)}
+.menu-toggle{display:none;width:38px;height:38px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#c7d1f4;align-items:center;justify-content:center;cursor:pointer}
+/* Main Layout */
 .main{display:flex;flex:1;overflow:hidden;margin-top:12px}
-.sidebar{width:280px;min-width:240px;background:rgba(10,18,46,.96);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden;box-shadow:10px 0 40px rgba(0,0,0,.08)}
+.sidebar{width:280px;min-width:240px;background:rgba(10,18,46,.96);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden;box-shadow:10px 0 40px rgba(0,0,0,.08);transition:margin-left .3s}
+.sidebar.hidden{margin-left:-280px}
 .sidebar-header{padding:18px 18px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .sidebar-header h3{font-size:14px;color:#f2f5ff;letter-spacing:.02em}
 .sidebar-header .count{font-size:12px;color:#9aabc7;background:rgba(255,255,255,.06);padding:4px 9px;border-radius:999px}
@@ -30,44 +34,60 @@ button, input{font:inherit}
 .tree-wrap{flex:1;overflow:auto;padding:8px 0 14px}
 .tree-wrap::-webkit-scrollbar{width:8px}
 .tree-wrap::-webkit-scrollbar-thumb{background:rgba(124,93,252,.35);border-radius:999px}
-.t-label{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:0;cursor:pointer;transition:background .2s,color .2s;padding-left:14px;color:#c8d1f3;position:relative;font-size:13px;}
+.t-label{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:0;cursor:pointer;transition:background .2s,color .2s;padding-left:14px;color:#c8d1f3;position:relative;font-size:13px}
 .t-label:hover{background:rgba(255,255,255,.06)}
 .t-label.active{color:#fff;background:rgba(124,93,252,.18)}
-.t-label .t-arrow{width:18px;display:flex;align-items:center;justify-content:center;color:#9ca8dc;transition:transform .2s}
-.t-folder, .t-leaf{display:flex;align-items:center;gap:8px;flex:1;}
-.t-folder .t-icon, .t-leaf .t-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:#7c5dfc}
-.t-folder .t-name, .t-leaf .t-name{text-overflow:ellipsis;white-space:nowrap;overflow:hidden;}
-.t-folder{padding-left:6px;border-radius:10px;}
-.t-leaf{padding-left:28px;border-radius:8px;}
+.t-label .t-arrow{width:18px;display:flex;align-items:center;justify-content:center;color:#9ca8dc;transition:transform .2s;font-size:10px}
+.t-folder,.t-leaf{display:flex;align-items:center;gap:8px;flex:1}
+.t-folder .t-icon,.t-leaf .t-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:#7c5dfc}
+.t-folder .t-name,.t-leaf .t-name{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.t-folder{padding-left:6px;border-radius:10px}
+.t-leaf{padding-left:28px;border-radius:8px}
 .t-children{display:none;flex-direction:column;margin-left:20px;border-left:1px solid rgba(255,255,255,.08);padding-left:10px}
 .t-children.open{display:flex}
+.highlight-match{background:rgba(124,93,252,.35);color:#fff;border-radius:3px;padding:0 2px}
 .splitter-v{width:6px;background:transparent;cursor:col-resize;transition:background .2s}
 .splitter-v:hover{background:rgba(124,93,252,.12)}
-.thumb-panel{width:220px;min-width:180px;background:rgba(8,16,42,.96);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden}
+/* Thumbnail Panel */
+.thumb-panel{width:220px;min-width:180px;background:rgba(8,16,42,.96);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;overflow:hidden;transition:margin-right .3s}
+.thumb-panel.hidden{margin-right:-220px;width:0;min-width:0;overflow:hidden}
 .thumb-header{padding:16px 16px 12px;font-size:12px;color:#9aabd9;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px}
 .thumb-list{flex:1;overflow:auto;padding:12px}
 .thumb-item{margin-bottom:12px;border-radius:14px;overflow:hidden;border:1px solid transparent;background:rgba(255,255,255,.02);cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
 .thumb-item:hover{transform:translateY(-1px);border-color:rgba(124,93,252,.3);box-shadow:0 12px 30px rgba(0,0,0,.12)}
 .thumb-item.active{border-color:#7c5dfc}
 .page-img{width:100%;aspect-ratio:3/4;background:linear-gradient(180deg,#1d234d 0%,#131a34 100%);display:flex;align-items:center;justify-content:center;color:#7f8beb;font-size:13px}
-.page-num{text-align:center;padding:8px 0;font-size:11px;color:#94a3c7;}
+.page-num{text-align:center;padding:8px 0;font-size:11px;color:#94a3c7}
+/* Preview Area */
 .preview-area{flex:1;display:flex;flex-direction:column;overflow:hidden;border-radius:24px;position:relative;background:linear-gradient(180deg,rgba(15,21,55,.98),rgba(9,15,38,.98));box-shadow:0 10px 30px rgba(0,0,0,.25);margin-right:18px}
-.preview-toolbar{height:56px;padding:0 18px;display:flex;align-items:center;gap:10px;background:rgba(12,20,49,.98);border-bottom:1px solid rgba(255,255,255,.06)}
-.tool-group{display:flex;align-items:center;gap:8px}
-.tbtn{width:38px;height:38px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.04);color:#c7d1f4;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.preview-toolbar{height:56px;padding:0 18px;display:flex;align-items:center;gap:10px;background:rgba(12,20,49,.98);border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:nowrap;overflow-x:auto;transition:transform .3s}
+.tool-group{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tbtn{width:38px;height:38px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.04);color:#c7d1f4;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
 .tbtn:hover{border-color:rgba(124,93,252,.35);background:rgba(124,93,252,.12);color:#fff}
 .tbtn.active{background:#7c5dfc;color:#fff;border-color:#7c5dfc}
-.tool-sep{width:1px;height:24px;background:rgba(255,255,255,.1)}
+.tool-sep{width:1px;height:24px;background:rgba(255,255,255,.1);flex-shrink:0}
 .zoom-info{font-size:12px;color:#9fb4d8;min-width:58px;text-align:center}
-.page-info{display:flex;align-items:center;gap:8px;margin-left:auto;color:#9fb4d8;font-size:12px}
+.page-info{display:flex;align-items:center;gap:8px;margin-left:auto;color:#9fb4d8;font-size:12px;flex-shrink:0}
 .page-info input{width:50px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(18,28,61,.95);color:#f4f6ff;outline:none;text-align:center}
+/* PDF Viewer Body */
 .preview-body{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden}
 .preview-body::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top right,rgba(124,93,252,.16),transparent 32%),radial-gradient(circle at bottom left,rgba(49,90,255,.12),transparent 28%);pointer-events:none}
-.preview-frame{width:100%;height:100%;border:none;border-radius:20px;background:#0f142f;box-shadow:0 30px 80px rgba(0,0,0,.28)}
+.pdf-viewer{position:relative;display:flex;align-items:flex-start;justify-content:center;overflow:auto;width:100%;height:100%}
+.pdf-canvas-wrap{position:relative;flex-shrink:0}
+.pdf-canvas-wrap canvas{display:block}
+.annotation-canvas{position:absolute;left:0;top:0;touch-action:none}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#8f9ecb;gap:10px;text-align:center;padding:0 18px}
 .empty-state i{font-size:60px;opacity:.38}
-.status-bar{height:46px;padding:0 20px;display:flex;align-items:center;gap:18px;font-size:12px;color:#9fb4d8;background:rgba(12,20,47,.92);border-top:1px solid rgba(255,255,255,.06)}
+/* Loading Overlay */
+.loading-overlay{position:absolute;inset:0;background:rgba(10,16,40,.85);display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:50;border-radius:24px}
+.loading-overlay.show{display:flex}
+.loading-spinner{width:48px;height:48px;border:4px solid rgba(124,93,252,.2);border-top-color:#7c5dfc;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:#9fb4d8;font-size:13px}
+/* Status Bar */
+.status-bar{height:46px;padding:0 20px;display:flex;align-items:center;gap:18px;font-size:12px;color:#9fb4d8;background:rgba(12,20,47,.92);border-top:1px solid rgba(255,255,255,.06);transition:transform .3s}
 .status-bar span{white-space:nowrap}
+/* Modal */
 .modal-bg{position:fixed;inset:0;background:rgba(6,11,28,.82);display:none;align-items:center;justify-content:center;z-index:1100}
 .modal-bg.show{display:flex}
 .modal-box{width:min(420px,calc(100%-32px));background:rgba(17,25,55,.98);border:1px solid rgba(124,93,252,.25);border-radius:24px;padding:28px;box-shadow:0 30px 90px rgba(0,0,0,.35)}
@@ -80,12 +100,24 @@ button, input{font:inherit}
 .mbtn-cancel{background:rgba(255,255,255,.08);color:#d2d8ff}
 .toast{position:fixed;bottom:28px;right:28px;padding:14px 18px;border-radius:14px;background:rgba(124,93,252,.98);color:#fff;font-size:13px;box-shadow:0 20px 60px rgba(18,25,68,.35);opacity:0;transform:translateY(10px);transition:.3s ease;pointer-events:none;z-index:1200}
 .toast.show{opacity:1;transform:translateY(0)}
-.pdf-viewer{position:relative;width:100%;height:100%;overflow:auto;display:flex;align-items:center;justify-content:center}
-.pdf-viewer canvas{display:block;max-width:100%;height:auto}
-.annotation-canvas{position:absolute;left:0;top:0;touch-action:none}
-@media(max-width:1180px){.main{flex-direction:column}.sidebar,.thumb-panel{width:100%;min-width:auto}.preview-area{margin-right:0;border-radius:0;}.splitter-v{display:none}}
+/* Fullscreen Mode */
+body.fullscreen .top-bar,body.fullscreen .sidebar,body.fullscreen .thumb-panel,body.fullscreen .status-bar,body.fullscreen .splitter-v{display:none!important}
+body.fullscreen .main{margin-top:0}
+body.fullscreen .preview-area{margin:0;border-radius:0}
+body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;top:0;z-index:10}
+/* Keyboard shortcut hint */
+.shortcut-hint{position:fixed;bottom:80px;right:28px;background:rgba(17,25,55,.95);border:1px solid rgba(124,93,252,.2);border-radius:16px;padding:16px 20px;font-size:12px;color:#9fb4d8;z-index:1050;display:none;min-width:200px}
+.shortcut-hint.show{display:block}
+.shortcut-hint h4{color:#fff;margin-bottom:8px;font-size:13px}
+.shortcut-hint div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
+.shortcut-hint kbd{background:rgba(124,93,252,.2);padding:2px 8px;border-radius:6px;color:#c7d1f4;font-family:inherit;font-size:11px}
+/* Bookmark indicator */
+.bookmark-indicator{position:absolute;top:8px;right:8px;color:#ffd966;font-size:14px;opacity:0;transition:opacity .3s}
+.thumb-item.bookmarked .bookmark-indicator{opacity:1}
+/* Responsive */
+@media(max-width:1180px){.main{flex-direction:column}.sidebar,.thumb-panel{width:100%;min-width:auto}.preview-area{margin-right:0;border-radius:0}.splitter-v{display:none}}
 @media(max-width:980px){.thumb-panel{display:none}.preview-area{margin-left:0}.sidebar{height:260px;min-height:220px;overflow:auto}.preview-body{padding:16px}}
-@media(max-width:760px){.top-bar{flex-wrap:wrap;gap:10px}.search-global{width:100%;max-width:none}.preview-toolbar{flex-wrap:wrap;gap:10px}.page-info{margin-left:0;width:100%;justify-content:flex-start}.preview-body{padding:12px}.status-bar{flex-wrap:wrap;gap:10px;height:auto;padding:12px}}
+@media(max-width:760px){.menu-toggle{display:flex}.top-bar{padding:0 12px;gap:10px}.top-bar .logo span{display:none}.search-global{order:10;width:100%;max-width:none}.top-bar{flex-wrap:wrap}.preview-toolbar{gap:6px;padding:0 10px;height:48px}.tbtn{width:34px;height:34px;border-radius:10px}.page-info{margin-left:0}.preview-body{padding:8px}.status-bar{flex-wrap:wrap;gap:10px;height:auto;padding:12px}.sidebar{position:fixed;left:0;top:56px;bottom:46px;width:300px;z-index:200;margin-left:0;transform:translateX(-100%);transition:transform .3s}.sidebar.mobile-open{transform:translateX(0)}}
 </style>
 <script type="module">
   import * as pdfjsLib from './pdfjs/pdf.mjs';
@@ -96,18 +128,20 @@ button, input{font:inherit}
 <body>
 <div class="container">
   <header class="top-bar">
+    <button class="menu-toggle" onclick="toggleSidebar()" title="菜单"><i class="fas fa-bars"></i></button>
     <div class="logo"><i class="fas fa-school"></i> 中国教材电子课本 <span>可视化教材浏览</span></div>
     <div class="search-global">
       <i class="fas fa-search"></i>
       <input id="globalSearch" type="text" placeholder="搜索教材名称、学科、版本..." oninput="onSearch(this.value)">
     </div>
     <div class="user-area">
+      <button class="tbtn" onclick="toggleShortcuts()" title="快捷键"><i class="fas fa-keyboard"></i></button>
       <button class="tbtn" onclick="showTokenModal()" title="Token设置"><i class="fas fa-key"></i></button>
       <div class="avatar">U</div>
     </div>
   </header>
   <section class="main">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <h3><i class="fas fa-folder-tree"></i> 教材目录</h3>
         <span class="count" id="catalogCount">加载中</span>
@@ -118,7 +152,7 @@ button, input{font:inherit}
       <div class="tree-wrap" id="treeWrap"></div>
     </aside>
     <div class="splitter-v"></div>
-    <aside class="thumb-panel">
+    <aside class="thumb-panel" id="thumbPanel">
       <div class="thumb-header"><i class="fas fa-th-list"></i> 页面缩略图</div>
       <div class="thumb-list" id="thumbList">
         <div class="empty-state" style="height:180px"><i class="fas fa-file-pdf"></i><p>选择教材后显示页面缩略图</p></div>
@@ -134,42 +168,46 @@ button, input{font:inherit}
           <button class="tbtn" onclick="activateTool('eraser')" id="btnEraser" title="橡皮擦"><i class="fas fa-eraser"></i></button>
         </div>
         <div class="tool-group">
-          <button class="tbtn" onclick="undoAction()" id="btnUndo" title="撤销"><i class="fas fa-undo"></i></button>
-          <button class="tbtn" onclick="redoAction()" id="btnRedo" title="重做"><i class="fas fa-redo"></i></button>
+          <button class="tbtn" onclick="undoAction()" title="撤销"><i class="fas fa-undo"></i></button>
+          <button class="tbtn" onclick="redoAction()" title="重做"><i class="fas fa-redo"></i></button>
         </div>
         <div class="tool-sep"></div>
         <div class="tool-group">
-          <button class="tbtn" onclick="zoomOut()" title="缩小"><i class="fas fa-search-minus"></i></button>
+          <button class="tbtn" onclick="zoomOut()" title="缩小 (−)"><i class="fas fa-search-minus"></i></button>
           <span class="zoom-info" id="zoomInfo">100%</span>
-          <button class="tbtn" onclick="zoomIn()" title="放大"><i class="fas fa-search-plus"></i></button>
-          <button class="tbtn" onclick="zoomFit()" title="适应宽度"><i class="fas fa-expand"></i></button>
+          <button class="tbtn" onclick="zoomIn()" title="放大 (+)"><i class="fas fa-search-plus"></i></button>
+          <button class="tbtn" onclick="zoomFit()" title="适应宽度 (0)"><i class="fas fa-expand"></i></button>
         </div>
         <div class="tool-sep"></div>
         <div class="tool-group">
-          <button class="tbtn" onclick="focusSearch()" title="检索"><i class="fas fa-search"></i></button>
-          <button class="tbtn" onclick="editDocument()" title="编辑"><i class="fas fa-edit"></i></button>
-          <button class="tbtn" onclick="saveAsPDF()" title="另存为"><i class="fas fa-save"></i></button>
-        </div>
-        <div class="tool-group">
+          <button class="tbtn" onclick="toggleBookmark()" id="btnBookmark" title="书签 (B)"><i class="fas fa-bookmark"></i></button>
+          <button class="tbtn" onclick="toggleFullscreen()" id="btnFullscreen" title="全屏 (F)"><i class="fas fa-expand-arrows-alt"></i></button>
           <button class="tbtn" onclick="downloadPDF()" title="下载"><i class="fas fa-download"></i></button>
           <button class="tbtn" onclick="shareDocument()" title="分享"><i class="fas fa-share-alt"></i></button>
-          <button class="tbtn" onclick="printDocument()" title="打印"><i class="fas fa-print"></i></button>
         </div>
         <div class="page-info">
+          <button class="tbtn" onclick="prevPage()" title="上一页 (←)" style="width:30px;height:30px"><i class="fas fa-chevron-left"></i></button>
           <span id="pageLabel">-</span>
           <input id="pageInput" type="number" min="1" value="1" onkeydown="if(event.key==='Enter')goToPage(this.value)">
           <span>/ <span id="pageTotal">-</span></span>
+          <button class="tbtn" onclick="nextPage()" title="下一页 (→)" style="width:30px;height:30px"><i class="fas fa-chevron-right"></i></button>
         </div>
       </div>
       <div class="preview-body" id="previewBody">
         <div class="empty-state" id="emptyState">
           <i class="fas fa-book-open"></i>
           <p>请从左侧选择教材进行预览</p>
-          <span class="hint">支持 PDF 浏览、缩放与基础操作</span>
+          <span style="font-size:12px;color:#6b7db3">支持 PDF 浏览、缩放、标注、书签 · 按 <kbd style="background:rgba(124,93,252,.2);padding:2px 6px;border-radius:4px">?</kbd> 查看快捷键</span>
         </div>
         <div id="pdfViewer" class="pdf-viewer" style="display:none">
-          <canvas id="pdfCanvas"></canvas>
-          <canvas id="annotationCanvas" class="annotation-canvas"></canvas>
+          <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
+            <canvas id="pdfCanvas"></canvas>
+            <canvas id="annotationCanvas" class="annotation-canvas"></canvas>
+          </div>
+        </div>
+        <div class="loading-overlay" id="loadingOverlay">
+          <div class="loading-spinner"></div>
+          <div class="loading-text" id="loadingText">正在加载 PDF...</div>
         </div>
       </div>
     </main>
@@ -178,6 +216,7 @@ button, input{font:inherit}
     <span id="statusFile">未选择文件</span>
     <span id="statusSize"></span>
     <span id="statusZoom"></span>
+    <span id="statusBookmark"></span>
     <span style="margin-left:auto" id="statusToken">免费用户</span>
   </footer>
 </div>
@@ -193,15 +232,26 @@ button, input{font:inherit}
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="shortcut-hint" id="shortcutHint">
+  <h4><i class="fas fa-keyboard"></i> 快捷键</h4>
+  <div><span>上一页</span><kbd>←</kbd></div>
+  <div><span>下一页</span><kbd>→</kbd></div>
+  <div><span>放大</span><kbd>+</kbd></div>
+  <div><span>缩小</span><kbd>−</kbd></div>
+  <div><span>适应宽度</span><kbd>0</kbd></div>
+  <div><span>全屏</span><kbd>F</kbd></div>
+  <div><span>书签</span><kbd>B</kbd></div>
+  <div><span>搜索</span><kbd>/</kbd></div>
+  <div><span>退出全屏</span><kbd>Esc</kbd></div>
+</div>
 <script>
-// 教材目录数据将从静态 JSON 文件加载，便于自动同步本地教材库
+// === State ===
 let catalog = [];
-const catalogDataUrl = 'catalog.json';
-
 const treeWrap = document.getElementById('treeWrap');
 const thumbList = document.getElementById('thumbList');
 const emptyState = document.getElementById('emptyState');
 const pdfViewer = document.getElementById('pdfViewer');
+const pdfCanvasWrap = document.getElementById('pdfCanvasWrap');
 const pdfCanvas = document.getElementById('pdfCanvas');
 const annotationCanvas = document.getElementById('annotationCanvas');
 const pdfCtx = pdfCanvas.getContext('2d');
@@ -210,11 +260,14 @@ const statusFile = document.getElementById('statusFile');
 const statusSize = document.getElementById('statusSize');
 const statusZoom = document.getElementById('statusZoom');
 const statusToken = document.getElementById('statusToken');
+const statusBookmark = document.getElementById('statusBookmark');
 const zoomInfo = document.getElementById('zoomInfo');
 const pageLabel = document.getElementById('pageLabel');
 const pageTotal = document.getElementById('pageTotal');
 const pageInput = document.getElementById('pageInput');
 const catalogCount = document.getElementById('catalogCount');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingText = document.getElementById('loadingText');
 
 let current = null;
 let activeTool = null;
@@ -226,513 +279,388 @@ let futureStack = [];
 let annotationActions = [];
 let drawing = false;
 let currentStroke = null;
+let thumbObserver = null;
 
-function getAnnotationStorageKey() {
-  return current && current.pdf ? `ct_annotations_${encodeURIComponent(current.pdf)}` : null;
+// === Annotations Storage ===
+function getAnnotationKey() {
+  return current?.pdf ? `ct_ann_${encodeURIComponent(current.pdf)}` : null;
 }
-
 function saveAnnotations() {
-  const key = getAnnotationStorageKey();
+  const key = getAnnotationKey();
   if (!key) return;
-  const payload = annotationActions.map(action => ({
-    ...action,
-    page: action.page || currentPage
-  }));
-  localStorage.setItem(key, JSON.stringify(payload));
+  localStorage.setItem(key, JSON.stringify(annotationActions));
 }
-
 function loadAnnotations() {
-  const key = getAnnotationStorageKey();
-  if (!key) return;
-  const raw = localStorage.getItem(key);
-  if (!raw) return;
+  const key = getAnnotationKey();
+  if (!key) { annotationActions = []; return; }
+  try { annotationActions = JSON.parse(localStorage.getItem(key) || '[]'); } catch { annotationActions = []; }
+}
+
+// === Bookmark ===
+function getBookmarkKey(pdf) {
+  return `ct_bm_${encodeURIComponent(pdf || current?.pdf || '')}`;
+}
+function toggleBookmark() {
+  if (!current || !pdfDoc) { showToast('请先选择教材'); return; }
+  const key = getBookmarkKey();
+  const existing = localStorage.getItem(key);
+  if (existing) {
+    localStorage.removeItem(key);
+    statusBookmark.textContent = '';
+    showToast('书签已移除');
+  } else {
+    localStorage.setItem(key, JSON.stringify({ page: currentPage, title: current.title }));
+    statusBookmark.textContent = `📖 第${currentPage}页`;
+    showToast(`已保存书签：第 ${currentPage} 页`);
+  }
+  updateThumbBookmarks();
+}
+function loadBookmark() {
+  if (!current) return;
+  const key = getBookmarkKey();
   try {
-    const list = JSON.parse(raw);
-    annotationActions = Array.isArray(list) ? list : [];
-  } catch (e) {
-    console.warn('加载标注失败', e);
-    annotationActions = [];
-  }
-}
-
-function clearAnnotationsStorage() {
-  const key = getAnnotationStorageKey();
-  if (!key) return;
-  localStorage.removeItem(key);
-}
-
-// 递归渲染三级树结构
-function renderTree(list) {
-  treeWrap.innerHTML = '';
-  catalogCount.textContent = flattenCount(list);
-  if (!list || !list.length) {
-    treeWrap.innerHTML = '<div class="empty-state" style="margin:14px 18px 0"><p>没有匹配的教材，请调整搜索关键词。</p></div>';
-    return;
-  }
-  list.forEach(level1 => {
-    const node1 = createNode(level1.label, false);
-    const children1 = document.createElement('div');
-    children1.className = 't-children';
-    if (level1.children) {
-      level1.children.forEach(level2 => {
-        const node2 = createNode(level2.label, false);
-        const children2 = document.createElement('div');
-        children2.className = 't-children';
-        if (level2.children) {
-          level2.children.forEach(leaf => {
-            const leafNode = createNode(leaf.title, true);
-            leafNode.dataset.pdf = leaf.pdf || '';
-            leafNode.dataset.size = leaf.size || '';
-            leafNode.dataset.pages = leaf.pages || '';
-            leafNode.onclick = (e) => { e.stopPropagation(); selectFile(leaf, leafNode); };
-            children2.appendChild(leafNode);
-          });
-        }
-        node2.appendChild(children2);
-        node2.querySelector('.t-arrow')?.addEventListener('click', (ev)=>{ ev.stopPropagation(); toggleChildren(children2, node2); });
-        children1.appendChild(node2);
-      });
+    const bm = JSON.parse(localStorage.getItem(key));
+    if (bm?.page) {
+      statusBookmark.textContent = `📖 第${bm.page}页`;
+      return bm.page;
     }
-    node1.appendChild(children1);
-    node1.querySelector('.t-arrow')?.addEventListener('click', (ev)=>{ ev.stopPropagation(); toggleChildren(children1, node1); });
-    treeWrap.appendChild(node1);
+  } catch {}
+  statusBookmark.textContent = '';
+  return null;
+}
+function updateThumbBookmarks() {
+  if (!current) return;
+  const key = getBookmarkKey();
+  let bmPage = null;
+  try { bmPage = JSON.parse(localStorage.getItem(key))?.page; } catch {}
+  document.querySelectorAll('.thumb-item').forEach(el => {
+    el.classList.toggle('bookmarked', Number(el.dataset.page) === bmPage);
   });
 }
 
-function createNode(name, isLeaf){
+// === Tree Rendering ===
+function renderTree(list) {
+  treeWrap.innerHTML = '';
+  catalogCount.textContent = flattenCount(list);
+  if (!list?.length) {
+    treeWrap.innerHTML = '<div class="empty-state" style="margin:14px 18px 0"><p>没有匹配的教材，请调整搜索关键词。</p></div>';
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  list.forEach(l1 => {
+    const node1 = createTreeNode(l1.label, false);
+    const ch1 = document.createElement('div');
+    ch1.className = 't-children';
+    (l1.children || []).forEach(l2 => {
+      const node2 = createTreeNode(l2.label, false);
+      const ch2 = document.createElement('div');
+      ch2.className = 't-children';
+      (l2.children || []).forEach(leaf => {
+        const leafNode = createTreeNode(leaf.title, true);
+        leafNode.dataset.pdf = leaf.pdf || '';
+        leafNode.onclick = e => { e.stopPropagation(); selectFile(leaf, leafNode); };
+        ch2.appendChild(leafNode);
+      });
+      node2.appendChild(ch2);
+      node2.querySelector('.t-arrow')?.addEventListener('click', ev => { ev.stopPropagation(); toggleChildren(ch2, node2); });
+      ch1.appendChild(node2);
+    });
+    node1.appendChild(ch1);
+    node1.querySelector('.t-arrow')?.addEventListener('click', ev => { ev.stopPropagation(); toggleChildren(ch1, node1); });
+    frag.appendChild(node1);
+  });
+  treeWrap.appendChild(frag);
+}
+function createTreeNode(name, isLeaf) {
   const el = document.createElement('div');
   el.className = isLeaf ? 't-label t-leaf' : 't-label t-folder';
-  el.innerHTML = `${isLeaf ? '<div class="t-arrow"></div><div class="t-icon"><i class="fas fa-file-alt"></i></div>' : '<div class="t-arrow">▶</div><div class="t-icon"><i class="fas fa-folder"></i></div>'}<div class="t-name">${name}</div>`;
+  el.innerHTML = isLeaf
+    ? `<div class="t-arrow"></div><div class="t-icon"><i class="fas fa-file-alt"></i></div><div class="t-name">${name}</div>`
+    : `<div class="t-arrow">▶</div><div class="t-icon"><i class="fas fa-folder"></i></div><div class="t-name">${name}</div>`;
   return el;
 }
-
-function toggleChildren(container, nodeEl){
+function toggleChildren(container, nodeEl) {
   const arrow = nodeEl.querySelector('.t-arrow');
-  if (container.classList.contains('open')){
-    container.classList.remove('open');
-    arrow && (arrow.textContent = '▶');
-  } else {
-    container.classList.add('open');
-    arrow && (arrow.textContent = '▼');
-  }
+  const isOpen = container.classList.toggle('open');
+  if (arrow) arrow.textContent = isOpen ? '▼' : '▶';
 }
-
-function flattenCount(list){
+function flattenCount(list) {
   let c = 0;
-  (list||[]).forEach(l1=>{ (l1.children||[]).forEach(l2=>{ c += (l2.children||[]).length; }); });
+  (list || []).forEach(l1 => (l1.children || []).forEach(l2 => { c += (l2.children || []).length; }));
   return c;
 }
 
+// === Catalog Loading & Search ===
 async function loadCatalog() {
   catalogCount.textContent = '加载中...';
   try {
-    const response = await fetch(catalogDataUrl);
-    if (!response.ok) throw new Error('目录加载失败');
-    catalog = await response.json();
+    const res = await fetch('catalog.json');
+    if (!res.ok) throw new Error('目录加载失败');
+    catalog = await res.json();
     renderTree(catalog);
     showToast(`已加载 ${flattenCount(catalog)} 套教材目录`);
-  } catch (error) {
-    console.error(error);
+  } catch (e) {
+    console.error(e);
     catalogCount.textContent = '加载失败';
-    showToast('教材目录加载失败，请检查 catalog.json');
-    renderTree(catalog);
+    showToast('教材目录加载失败');
+    renderTree([]);
   }
 }
+function onSearch(val) {
+  const kw = (val || '').trim().toLowerCase();
+  // Sync both search inputs
+  document.getElementById('globalSearch').value = val || '';
+  document.getElementById('treeSearch').value = val || '';
+  if (!kw) { renderTree(catalog); return; }
+  renderTree(filterCatalog(catalog, kw));
+}
+function filterCatalog(nodes, q) {
+  const out = [];
+  nodes.forEach(n1 => {
+    const c1 = { label: n1.label, children: [] };
+    (n1.children || []).forEach(n2 => {
+      const c2 = { label: n2.label, children: [] };
+      (n2.children || []).forEach(leaf => {
+        if ((leaf.title || '').toLowerCase().includes(q) || (n2.label || '').toLowerCase().includes(q) || (n1.label || '').toLowerCase().includes(q))
+          c2.children.push(leaf);
+      });
+      if (c2.children.length) c1.children.push(c2);
+    });
+    if (c1.children.length) out.push(c1);
+  });
+  return out;
+}
 
+// === File Selection ===
 function selectFile(item, nodeEl) {
   current = item;
-  Array.from(treeWrap.querySelectorAll('.t-label')).forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.t-label.active').forEach(n => n.classList.remove('active'));
   if (nodeEl) nodeEl.classList.add('active');
   statusFile.textContent = item.title;
-  statusSize.textContent = item.size;
+  statusSize.textContent = item.size || '';
   statusZoom.textContent = '';
-  pageLabel.textContent = '1';
-  pageTotal.textContent = item.pages || '-';
+  pageLabel.textContent = '-';
+  pageTotal.textContent = '-';
   pageInput.value = 1;
   pdfScale = 1;
   resetHistory();
-  showPreview(item.pdf, item.pages).then(() => {
+  // Close sidebar on mobile
+  if (window.innerWidth <= 760) {
+    document.getElementById('sidebar').classList.remove('mobile-open');
+  }
+  showPreview(item.pdf).then(() => {
     loadAnnotations();
+    const bmPage = loadBookmark();
+    if (bmPage && bmPage > 1 && bmPage <= (pdfDoc?.numPages || 9999)) {
+      goToPage(bmPage);
+    }
+    drawAnnotations();
     highlightActiveThumb();
   }).catch(() => {});
 }
 
-async function showPreview(src, pages) {
+// === PDF Preview ===
+async function showPreview(src) {
   if (!src) return;
   emptyState.style.display = 'none';
   pdfViewer.style.display = 'flex';
+  showLoading('正在加载 PDF...');
   try {
-    pdfDoc = await loadPDF(src);
+    pdfDoc = await pdfjsLib.getDocument({ url: src, cMapUrl: './pdfjs/cmaps/', cMapPacked: true }).promise;
     currentPage = 1;
-    const pageCount = pdfDoc.numPages || pages || 1;
+    const pageCount = pdfDoc.numPages;
     pageTotal.textContent = pageCount;
+    pageInput.max = pageCount;
     populateThumbs(pageCount);
-    await renderPage(currentPage);
-    showToast('PDF 已加载并渲染');
-  } catch (error) {
-    console.error(error);
+    await renderPage(1);
+    hideLoading();
+    showToast(`PDF 已加载（${pageCount} 页）`);
+  } catch (e) {
+    console.error(e);
+    hideLoading();
     showToast('PDF 加载失败，请检查文件地址');
   }
 }
-
-function loadPDF(src) {
-  return pdfjsLib.getDocument({url: src, cMapUrl: './pdfjs/cmaps/', cMapPacked: true}).promise;
-}
+function showLoading(text) { loadingText.textContent = text || '加载中...'; loadingOverlay.classList.add('show'); }
+function hideLoading() { loadingOverlay.classList.remove('show'); }
 
 async function renderPage(pageNum) {
   if (!pdfDoc) return;
   const page = await pdfDoc.getPage(pageNum);
-  const viewport = page.getViewport({scale: pdfScale});
-  pdfCanvas.width = viewport.width;
-  pdfCanvas.height = viewport.height;
-  annotationCanvas.width = viewport.width;
-  annotationCanvas.height = viewport.height;
-  pdfCanvas.style.width = viewport.width + 'px';
-  pdfCanvas.style.height = viewport.height + 'px';
-  annotationCanvas.style.width = viewport.width + 'px';
-  annotationCanvas.style.height = viewport.height + 'px';
-  pdfViewer.style.minHeight = viewport.height + 'px';
-  await page.render({canvasContext: pdfCtx, viewport}).promise;
+  const viewport = page.getViewport({ scale: pdfScale });
+  const w = viewport.width, h = viewport.height;
+  pdfCanvas.width = w; pdfCanvas.height = h;
+  annotationCanvas.width = w; annotationCanvas.height = h;
+  pdfCanvas.style.width = w + 'px'; pdfCanvas.style.height = h + 'px';
+  annotationCanvas.style.width = w + 'px'; annotationCanvas.style.height = h + 'px';
+  pdfCanvasWrap.style.width = w + 'px'; pdfCanvasWrap.style.height = h + 'px';
+  await page.render({ canvasContext: pdfCtx, viewport }).promise;
   currentPage = pageNum;
   pageLabel.textContent = pageNum;
+  pageInput.value = pageNum;
   pageTotal.textContent = pdfDoc.numPages;
   updateZoomInfo();
   drawAnnotations();
   highlightActiveThumb();
+  updateHash();
 }
 
+// === Thumbnails with Lazy Loading ===
 function populateThumbs(count) {
   thumbList.innerHTML = '';
+  if (thumbObserver) { thumbObserver.disconnect(); thumbObserver = null; }
   if (!count || count < 1) {
     thumbList.innerHTML = '<div class="empty-state" style="height:180px"><p>无法生成缩略图</p></div>';
     return;
   }
-  const thumbCount = Math.min(8, count);
-  for (let i = 1; i <= thumbCount; i++) {
+  thumbObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const pg = Number(el.dataset.page);
+        const canvas = el.querySelector('canvas');
+        if (canvas && !canvas.dataset.rendered) {
+          renderThumb(pg, canvas);
+          canvas.dataset.rendered = '1';
+        }
+        thumbObserver.unobserve(el);
+      }
+    });
+  }, { root: thumbList, rootMargin: '200px' });
+
+  const frag = document.createDocumentFragment();
+  for (let i = 1; i <= count; i++) {
     const item = document.createElement('div');
     item.className = 'thumb-item';
     if (i === currentPage) item.classList.add('active');
     item.dataset.page = i;
     const thumbCanvas = document.createElement('canvas');
-    thumbCanvas.width = 140;
-    thumbCanvas.height = 192;
-    thumbCanvas.style.display = 'block';
-    thumbCanvas.style.width = '100%';
-    thumbCanvas.style.height = 'auto';
+    thumbCanvas.width = 140; thumbCanvas.height = 192;
+    thumbCanvas.style.cssText = 'display:block;width:100%;height:auto';
     const numLabel = document.createElement('div');
     numLabel.className = 'page-num';
-    numLabel.textContent = i;
+    numLabel.innerHTML = `${i} <span class="bookmark-indicator"><i class="fas fa-bookmark"></i></span>`;
     item.appendChild(thumbCanvas);
     item.appendChild(numLabel);
-    item.onclick = () => { goToPage(i); };
-    thumbList.appendChild(item);
-    if (pdfDoc) renderThumb(i, thumbCanvas);
+    item.onclick = () => goToPage(i);
+    frag.appendChild(item);
+    thumbObserver.observe(item);
   }
-  highlightActiveThumb();
+  thumbList.appendChild(frag);
+  updateThumbBookmarks();
 }
-
 function highlightActiveThumb() {
-  Array.from(thumbList.querySelectorAll('.thumb-item')).forEach(item => {
-    item.classList.toggle('active', Number(item.dataset.page) === currentPage);
-  });
-  const active = thumbList.querySelector('.thumb-item.active');
-  if (active) active.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+  document.querySelectorAll('.thumb-item.active').forEach(el => el.classList.remove('active'));
+  const active = thumbList.querySelector(`.thumb-item[data-page="${currentPage}"]`);
+  if (active) { active.classList.add('active'); active.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 }
-
 async function renderThumb(pageNum, canvas) {
   if (!pdfDoc) return;
-  const page = await pdfDoc.getPage(pageNum);
-  const viewport = page.getViewport({scale: 0.15});
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  const ctx = canvas.getContext('2d');
-  await page.render({canvasContext: ctx, viewport}).promise;
+  try {
+    const page = await pdfDoc.getPage(pageNum);
+    const viewport = page.getViewport({ scale: 0.15 });
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+  } catch (e) { console.warn('缩略图渲染失败', pageNum, e); }
 }
 
-function onSearch(val) {
-  const keyword = (val || '').trim().toLowerCase();
-  if (!keyword) { renderTree(catalog); return; }
-  const filtered = filterCatalog(catalog, keyword);
-  renderTree(filtered);
+// === Navigation ===
+function goToPage(n) {
+  if (!pdfDoc) { showToast('请先选择教材'); return; }
+  const page = Math.max(1, Math.min(pdfDoc.numPages, parseInt(n, 10) || 1));
+  pageInput.value = page;
+  renderPage(page);
 }
+function prevPage() { if (currentPage > 1) goToPage(currentPage - 1); }
+function nextPage() { if (pdfDoc && currentPage < pdfDoc.numPages) goToPage(currentPage + 1); }
 
-function filterCatalog(nodes, q){
-  const out = [];
-  nodes.forEach(n1=>{
-    const n1copy = { label: n1.label, children: [] };
-    (n1.children||[]).forEach(n2=>{
-      const n2copy = { label: n2.label, children: [] };
-      (n2.children||[]).forEach(leaf=>{
-        if ((leaf.title||'').toLowerCase().includes(q) || (n2.label||'').toLowerCase().includes(q) || (n1.label||'').toLowerCase().includes(q)){
-          n2copy.children.push(leaf);
-        }
-      });
-      if (n2copy.children.length) n1copy.children.push(n2copy);
-    });
-    if (n1copy.children.length) out.push(n1copy);
-  });
-  return out;
-}
-
-function showTokenModal() { document.getElementById('tokenModal').classList.add('show'); }
-function closeModal() { document.getElementById('tokenModal').classList.remove('show'); }
-function submitToken() {
-  const input = document.getElementById('tokenInput');
-  const token = input.value.trim();
-  if (!token) {
-    showToast('请输入 Token');
-    return;
-  }
-  localStorage.setItem('ct_token', token);
-  statusToken.textContent = token.includes('PRE') ? '会员用户' : '普通用户';
-  closeModal();
-  showToast('Token 已保存');
-}
-
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => toast.classList.remove('show'), 2400);
-}
-
+// === Zoom ===
 function updateZoomInfo() {
   zoomInfo.textContent = `${Math.round(pdfScale * 100)}%`;
   statusZoom.textContent = `缩放：${Math.round(pdfScale * 100)}%`;
 }
-
-function zoomIn() { if (!pdfDoc) return; pdfScale = Math.min(2.5, +(pdfScale + 0.1).toFixed(2)); renderPage(currentPage); }
-function zoomOut() { if (!pdfDoc) return; pdfScale = Math.max(0.6, +(pdfScale - 0.1).toFixed(2)); renderPage(currentPage); }
+function zoomIn() { if (!pdfDoc) return; pdfScale = Math.min(3, +(pdfScale + 0.15).toFixed(2)); renderPage(currentPage); }
+function zoomOut() { if (!pdfDoc) return; pdfScale = Math.max(0.4, +(pdfScale - 0.15).toFixed(2)); renderPage(currentPage); }
 async function zoomFit() {
   if (!pdfDoc) return;
   const page = await pdfDoc.getPage(currentPage);
-  const viewport = page.getViewport({scale: 1});
-  const available = pdfViewer.getBoundingClientRect().width - 40;
-  pdfScale = Math.min(2.0, Math.max(0.6, available / viewport.width));
+  const vp = page.getViewport({ scale: 1 });
+  const body = document.getElementById('previewBody');
+  const availW = body.clientWidth - 48;
+  const availH = body.clientHeight - 48;
+  pdfScale = Math.min(2.5, Math.max(0.4, Math.min(availW / vp.width, availH / vp.height)));
   renderPage(currentPage);
 }
 
+// === Annotation Tools ===
 function activateTool(tool) {
-  if(!checkAccess()) return;
   activeTool = activeTool === tool ? null : tool;
   ['btnAnnotate', 'btnPen', 'btnText', 'btnEraser'].forEach(id => document.getElementById(id).classList.remove('active'));
-  if (activeTool) document.getElementById(`btn${tool.charAt(0).toUpperCase() + tool.slice(1)}`).classList.add('active');
   if (activeTool) {
-    showToast(`${tool === 'annotate' ? '标注' : tool === 'pen' ? '画笔' : tool === 'text' ? '文字' : '橡皮擦'} 已激活，点击画布开始操作`);
-  } else {
-    showToast('已退出当前编辑工具');
+    document.getElementById(`btn${tool.charAt(0).toUpperCase() + tool.slice(1)}`).classList.add('active');
+    showToast(`${{ annotate: '标注', pen: '画笔', text: '文字', eraser: '橡皮擦' }[tool]} 已激活`);
   }
 }
-
 function undoAction() {
-  if (!annotationActions.length) {
-    showToast('暂无可撤销操作');
-    return;
-  }
-  const action = annotationActions.pop();
-  futureStack.push(action);
-  saveAnnotations();
-  drawAnnotations();
-  showToast('撤销成功');
+  if (!annotationActions.length) { showToast('暂无可撤销操作'); return; }
+  futureStack.push(annotationActions.pop());
+  saveAnnotations(); drawAnnotations();
+  showToast('已撤销');
 }
-
 function redoAction() {
-  if (!futureStack.length) {
-    showToast('暂无可重做操作');
-    return;
-  }
-  const action = futureStack.pop();
-  annotationActions.push(action);
-  saveAnnotations();
-  drawAnnotations();
-  showToast('重做成功');
+  if (!futureStack.length) { showToast('暂无可重做操作'); return; }
+  annotationActions.push(futureStack.pop());
+  saveAnnotations(); drawAnnotations();
+  showToast('已重做');
 }
-
-function focusSearch() {
-  document.getElementById('globalSearch').focus();
-}
-
-function editDocument() {
-  if(!checkAccess()) return;
-  if (!current) {
-    showToast('请先选择教材');
-    return;
-  }
-  const content = prompt('请输入备注内容，保存为当前教材简易备注：', '此教材内容丰富，适合课后复习');
-  if (content !== null) {
-    historyStack.push({type:'note', content});
-    showToast('已保存备注内容');
-  }
-}
-
-function saveAsPDF() {
-  if(!checkAccess()) return;
-  if (!current) { showToast('请先选择教材'); return; }
-  fetch(current.pdf)
-    .then(response => {
-      if (!response.ok) throw new Error('无法下载文件');
-      return response.blob();
-    })
-    .then(blob => {
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${current.title}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(link.href);
-      showToast('已开始下载 PDF 文件');
-    })
-    .catch(() => {
-      const link = document.createElement('a');
-      link.href = current.pdf;
-      link.download = `${current.title}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('已开始下载 PDF 文件（备用模式）');
-    });
-}
-
-function downloadPDF() { if(!checkAccess()) return; saveAsPDF(); }
-
-function shareDocument() {
-  if(!checkAccess()) return;
-  if (!current) { showToast('请先选择教材'); return; }
-  const url = `${window.location.origin}${window.location.pathname}#${encodeURIComponent(current.title)}?page=${currentPage}`;
-  navigator.clipboard?.writeText(url).then(() => {
-    showToast('已复制分享链接到剪贴板');
-  }).catch(() => {
-    showToast('无法复制链接，请手动分享');
-  });
-}
-
-function printDocument() {
-  if(!checkAccess()) return;
-  if (!current || !pdfDoc) { showToast('请先选择教材并加载 PDF'); return; }
-  const tmpCanvas = document.createElement('canvas');
-  tmpCanvas.width = pdfCanvas.width;
-  tmpCanvas.height = pdfCanvas.height;
-  const tmpCtx = tmpCanvas.getContext('2d');
-  tmpCtx.drawImage(pdfCanvas, 0, 0);
-  tmpCtx.drawImage(annotationCanvas, 0, 0);
-  const dataUrl = tmpCanvas.toDataURL('image/png');
-  const printWindow = window.open('', '_blank');
-  if (!printWindow) { showToast('浏览器阻止弹窗，请允许后重试'); return; }
-  printWindow.document.write(`<!DOCTYPE html><html><head><title>打印 PDF</title></head><body style="margin:0;padding:0;text-align:center;background:#222;"><img src="${dataUrl}" style="max-width:100%;height:auto;" onload="window.print();window.onafterprint = ()=>window.close();"></body></html>`);
-  printWindow.document.close();
-  showToast('打印预览已打开');
-}
-
-function goToPage(n) {
-  if (!current || !pdfDoc) { showToast('请先选择教材'); return; }
-  const page = Math.max(1, Math.min(pdfDoc.numPages, parseInt(n, 10) || 1));
-  pageInput.value = page;
-  renderPage(page);
-  historyStack.push({type:'page', page});
-  showToast(`跳转至第 ${page} 页`);
-}
-
-function checkAccess(){
-  const token = localStorage.getItem('ct_token');
-  if(!token){
-    showToast('当前为免费开放功能，注册会员可获得更多特权');
-    return true;
-  }
-  return true;
-}
-
-function enableSplitters(){
-  const splitters = document.querySelectorAll('.splitter-v');
-  splitters.forEach(splitter => {
-    splitter.addEventListener('mousedown', (e)=>{
-      e.preventDefault();
-      const prev = splitter.previousElementSibling;
-      const next = splitter.nextElementSibling;
-      const startX = e.clientX;
-      const prevW = prev.getBoundingClientRect().width;
-      const nextW = next.getBoundingClientRect().width;
-      function onMove(ev){
-        const dx = ev.clientX - startX;
-        const min = 120;
-        let newPrev = prevW + dx;
-        let newNext = nextW - dx;
-        if(newPrev < min) { newPrev = min; newNext = prevW + nextW - min; }
-        if(newNext < min) { newNext = min; newPrev = prevW + nextW - min; }
-        prev.style.width = newPrev + 'px';
-        next.style.width = newNext + 'px';
-      }
-      function onUp(){
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-      }
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
-  });
-}
-
 function attachAnnotationEvents() {
   annotationCanvas.addEventListener('pointerdown', handlePointerDown);
   annotationCanvas.addEventListener('pointermove', handlePointerMove);
   annotationCanvas.addEventListener('pointerup', handlePointerUp);
   annotationCanvas.addEventListener('pointerleave', handlePointerUp);
 }
-
 function handlePointerDown(event) {
   if (!activeTool || !pdfDoc) return;
   const rect = annotationCanvas.getBoundingClientRect();
   const x = ((event.clientX - rect.left) / rect.width) * annotationCanvas.width;
   const y = ((event.clientY - rect.top) / rect.height) * annotationCanvas.height;
   if (activeTool === 'text') {
-    const text = prompt('请输入文字内容：', '');
+    const text = prompt('请输入文字：', '');
     if (text) {
-      const action = {type: 'text', page: currentPage, x, y, text, color: '#ffd966', font: '18px sans-serif'};
-      annotationActions.push(action);
-      historyStack.push(action);
-      futureStack = [];
-      saveAnnotations();
-      drawAnnotations();
-      showToast('文字已添加');
+      const action = { type: 'text', page: currentPage, x, y, text, color: '#ffd966', font: '18px sans-serif' };
+      annotationActions.push(action); historyStack.push(action); futureStack = [];
+      saveAnnotations(); drawAnnotations(); showToast('文字已添加');
     }
     return;
   }
   drawing = true;
-  const strokeType = activeTool === 'eraser' ? 'eraser' : activeTool === 'annotate' ? 'highlight' : 'pen';
+  const t = activeTool === 'eraser' ? 'eraser' : activeTool === 'annotate' ? 'highlight' : 'pen';
   currentStroke = {
-    type: strokeType,
-    page: currentPage,
-    color: strokeType === 'highlight' ? 'rgba(255,233,102,0.35)' : strokeType === 'eraser' ? 'rgba(0,0,0,1)' : '#ff7f50',
-    lineWidth: strokeType === 'eraser' ? 28 : strokeType === 'highlight' ? 28 : 3,
-    composite: strokeType === 'eraser' ? 'destination-out' : 'source-over',
-    path: [{x, y}]
+    type: t, page: currentPage,
+    color: t === 'highlight' ? 'rgba(255,233,102,0.35)' : t === 'eraser' ? 'rgba(0,0,0,1)' : '#ff7f50',
+    lineWidth: t === 'eraser' ? 28 : t === 'highlight' ? 28 : 3,
+    composite: t === 'eraser' ? 'destination-out' : 'source-over',
+    path: [{ x, y }]
   };
 }
-
 function handlePointerMove(event) {
   if (!drawing || !currentStroke) return;
   const rect = annotationCanvas.getBoundingClientRect();
-  const x = ((event.clientX - rect.left) / rect.width) * annotationCanvas.width;
-  const y = ((event.clientY - rect.top) / rect.height) * annotationCanvas.height;
-  currentStroke.path.push({x, y});
+  currentStroke.path.push({
+    x: ((event.clientX - rect.left) / rect.width) * annotationCanvas.width,
+    y: ((event.clientY - rect.top) / rect.height) * annotationCanvas.height
+  });
   drawAnnotations();
 }
-
 function handlePointerUp() {
   if (!drawing || !currentStroke) return;
   drawing = false;
-  annotationActions.push(currentStroke);
-  historyStack.push(currentStroke);
-  futureStack = [];
-  saveAnnotations();
-  currentStroke = null;
-  showToast('已添加标注');
+  annotationActions.push(currentStroke); historyStack.push(currentStroke); futureStack = [];
+  saveAnnotations(); currentStroke = null;
 }
-
 function drawAnnotations() {
   annCtx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
-  const actions = annotationActions.filter(action => !action.page || action.page === currentPage).concat(currentStroke ? [currentStroke] : []);
+  const actions = annotationActions.filter(a => !a.page || a.page === currentPage).concat(currentStroke ? [currentStroke] : []);
   actions.forEach(action => {
     if (action.type === 'text') {
       annCtx.save();
@@ -746,32 +674,159 @@ function drawAnnotations() {
     annCtx.globalCompositeOperation = action.composite || 'source-over';
     annCtx.strokeStyle = action.color;
     annCtx.lineWidth = action.lineWidth;
-    annCtx.lineCap = 'round';
-    annCtx.lineJoin = 'round';
+    annCtx.lineCap = 'round'; annCtx.lineJoin = 'round';
     annCtx.beginPath();
-    action.path.forEach((point, index) => {
-      if (index === 0) annCtx.moveTo(point.x, point.y);
-      else annCtx.lineTo(point.x, point.y);
-    });
+    action.path.forEach((p, i) => { i === 0 ? annCtx.moveTo(p.x, p.y) : annCtx.lineTo(p.x, p.y); });
     annCtx.stroke();
     annCtx.restore();
   });
 }
-
 function resetHistory() {
-  historyStack = [];
-  futureStack = [];
-  annotationActions = [];
-  currentStroke = null;
-  drawAnnotations();
+  historyStack = []; futureStack = []; annotationActions = []; currentStroke = null;
+  annCtx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
 }
 
+// === Download & Share ===
+function downloadPDF() {
+  if (!current) { showToast('请先选择教材'); return; }
+  const link = document.createElement('a');
+  link.href = current.pdf; link.download = `${current.title}`;
+  link.target = '_blank';
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  showToast('已开始下载');
+}
+function shareDocument() {
+  if (!current) { showToast('请先选择教材'); return; }
+  updateHash();
+  const url = window.location.href;
+  navigator.clipboard?.writeText(url).then(() => showToast('已复制分享链接')).catch(() => showToast('无法复制链接'));
+}
+
+// === URL Hash ===
+function updateHash() {
+  if (!current) return;
+  const title = encodeURIComponent(current.title);
+  const hash = `#${title}?page=${currentPage}`;
+  if (window.location.hash !== hash) history.replaceState(null, '', hash);
+}
+
+// === Fullscreen ===
+function toggleFullscreen() {
+  document.body.classList.toggle('fullscreen');
+  const isFS = document.body.classList.contains('fullscreen');
+  document.getElementById('btnFullscreen').classList.toggle('active', isFS);
+  showToast(isFS ? '全屏模式（按 Esc 退出）' : '已退出全屏');
+  if (pdfDoc) setTimeout(() => zoomFit(), 100);
+}
+
+// === Mobile Sidebar ===
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+// === Keyboard Shortcuts ===
+function toggleShortcuts() {
+  document.getElementById('shortcutHint').classList.toggle('show');
+}
+document.addEventListener('keydown', (e) => {
+  // Ignore when typing in input
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowLeft': case 'ArrowUp': e.preventDefault(); prevPage(); break;
+    case 'ArrowRight': case 'ArrowDown': e.preventDefault(); nextPage(); break;
+    case '+': case '=': e.preventDefault(); zoomIn(); break;
+    case '-': case '_': e.preventDefault(); zoomOut(); break;
+    case '0': e.preventDefault(); zoomFit(); break;
+    case 'f': case 'F': e.preventDefault(); toggleFullscreen(); break;
+    case 'b': case 'B': e.preventDefault(); toggleBookmark(); break;
+    case '/': e.preventDefault(); document.getElementById('globalSearch').focus(); break;
+    case '?': e.preventDefault(); toggleShortcuts(); break;
+    case 'Escape':
+      if (document.body.classList.contains('fullscreen')) toggleFullscreen();
+      document.getElementById('shortcutHint').classList.remove('show');
+      closeModal();
+      break;
+  }
+});
+
+// === Token ===
+function showTokenModal() { document.getElementById('tokenModal').classList.add('show'); }
+function closeModal() { document.getElementById('tokenModal').classList.remove('show'); }
+function submitToken() {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) { showToast('请输入 Token'); return; }
+  localStorage.setItem('ct_token', token);
+  statusToken.textContent = token.includes('PRE') ? '会员用户' : '普通用户';
+  closeModal(); showToast('Token 已保存');
+}
+
+// === Toast ===
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// === Splitter ===
+function enableSplitters() {
+  document.querySelectorAll('.splitter-v').forEach(splitter => {
+    splitter.addEventListener('mousedown', e => {
+      e.preventDefault();
+      const prev = splitter.previousElementSibling;
+      const next = splitter.nextElementSibling;
+      const startX = e.clientX;
+      const prevW = prev.getBoundingClientRect().width;
+      const nextW = next.getBoundingClientRect().width;
+      const onMove = ev => {
+        const dx = ev.clientX - startX;
+        const min = 120;
+        let np = Math.max(min, prevW + dx);
+        let nn = Math.max(min, nextW - dx);
+        if (np + nn > prevW + nextW) return;
+        prev.style.width = np + 'px'; next.style.width = nn + 'px';
+      };
+      const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
+}
+
+// === Find leaf by title ===
+function findLeafByTitle(title) {
+  for (const l1 of catalog)
+    for (const l2 of (l1.children || []))
+      for (const leaf of (l2.children || []))
+        if (leaf.title === title) return leaf;
+  return null;
+}
+
+// === Init ===
 async function init() {
   const token = localStorage.getItem('ct_token');
   if (token) statusToken.textContent = token.includes('PRE') ? '会员用户' : '普通用户';
   await loadCatalog();
   enableSplitters();
   attachAnnotationEvents();
+
+  // Handle ?file= parameter (from main site redirect)
+  const params = new URLSearchParams(window.location.search);
+  const fileParam = params.get('file');
+  if (fileParam) {
+    try {
+      const src = decodeURIComponent(fileParam);
+      current = { title: src.split('/').pop() || '外部PDF', pdf: src, size: '' };
+      statusFile.textContent = current.title;
+      await showPreview(current.pdf);
+      return;
+    } catch (e) {
+      console.error('file参数加载失败', e);
+      showToast('通过链接加载 PDF 失败');
+    }
+  }
+
+  // Handle hash navigation
   if (window.location.hash) {
     const hashValue = decodeURIComponent(window.location.hash.slice(1));
     const parts = hashValue.split('?page=');
@@ -780,39 +835,11 @@ async function init() {
     const matched = findLeafByTitle(hashTitle);
     if (matched) {
       selectFile(matched, null);
-      if (pageFromHash && !Number.isNaN(pageFromHash)) {
-        goToPage(pageFromHash);
+      if (pageFromHash && !isNaN(pageFromHash)) {
+        setTimeout(() => goToPage(pageFromHash), 500);
       }
     }
   }
-
-  // 支持通过 ?file=<url> 直接预览外部 PDF（来自主站跳转）
-  const params = new URLSearchParams(window.location.search);
-  const fileParam = params.get('file');
-  if (fileParam) {
-    try{
-      const src = decodeURIComponent(fileParam);
-      // 构造一个简单的 current 对象以便后续操作可用
-      current = { title: src.split('/').pop() || src, pdf: src, size: '' };
-      statusFile.textContent = current.title;
-      statusSize.textContent = current.size || '';
-      await showPreview(current.pdf);
-    }catch(e){
-      console.error('通过 file 参数加载 PDF 失败', e);
-      showToast('通过链接加载 PDF 失败');
-    }
-  }
-}
-
-function findLeafByTitle(title){
-  for(const l1 of catalog){
-    for(const l2 of (l1.children||[])){
-      for(const leaf of (l2.children||[])){
-        if(leaf.title === title) return leaf;
-      }
-    }
-  }
-  return null;
 }
 
 init();
