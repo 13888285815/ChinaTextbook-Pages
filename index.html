@@ -119,6 +119,11 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 @media(max-width:1180px){.main{flex-direction:column}.sidebar,.thumb-panel{width:100%;min-width:auto}.preview-area{margin-right:0;border-radius:0}.splitter-v{display:none}}
 @media(max-width:980px){.thumb-panel{display:none}.preview-area{margin-left:0}.sidebar{height:260px;min-height:220px;overflow:auto}.preview-body{padding:16px}}
 @media(max-width:760px){.menu-toggle{display:flex}.top-bar{padding:0 12px;gap:10px}.top-bar .logo span{display:none}.search-global{order:10;width:100%;max-width:none}.top-bar{flex-wrap:wrap}.preview-toolbar{gap:6px;padding:0 10px;height:48px}.tbtn{width:34px;height:34px;border-radius:10px}.page-info{margin-left:0}.preview-body{padding:8px}.status-bar{flex-wrap:wrap;gap:10px;height:auto;padding:12px}.sidebar{position:fixed;left:0;top:56px;bottom:46px;width:300px;z-index:200;margin-left:0;transform:translateX(-100%);transition:transform .3s}.sidebar.mobile-open{transform:translateX(0)}.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}.sidebar-backdrop.show{display:block}}
+/* Floating sidebar toggle - always visible */
+.sidebar-float-toggle{position:fixed;left:12px;bottom:60px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#7c5dfc,#5b3de8);color:#fff;border:none;box-shadow:0 8px 24px rgba(124,93,252,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:250;font-size:18px;transition:transform .2s,box-shadow .2s}
+.sidebar-float-toggle:hover{transform:scale(1.1);box-shadow:0 12px 32px rgba(124,93,252,.5)}
+.sidebar-float-toggle.hide{display:none}
+@media(min-width:761px){.sidebar-float-toggle{display:none}}
 </style>
 <script type="module">
   import * as pdfjsLib from './pdfjs/pdf.mjs';
@@ -254,6 +259,8 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
   <div><span>搜索</span><kbd>/</kbd></div>
   <div><span>退出全屏</span><kbd>Esc</kbd></div>
 </div>
+<button class="sidebar-float-toggle" id="sidebarFloatToggle" onclick="toggleSidebar()" title="打开目录"><i class="fas fa-folder-tree"></i></button>
+
 <script>
 // === State ===
 let catalog = [];
@@ -468,6 +475,8 @@ function selectFile(item, nodeEl) {
   if (window.innerWidth <= 760) {
     document.getElementById('sidebar').classList.remove('mobile-open');
     document.getElementById('sidebarBackdrop').classList.remove('show');
+    const fb = document.getElementById('sidebarFloatToggle');
+    if (fb) { fb.innerHTML = '<i class="fas fa-folder-tree"></i>'; fb.title = '打开目录'; }
   }
   showPreview(item.pdf).then(() => {
     loadAnnotations();
@@ -749,8 +758,13 @@ function toggleFullscreen() {
 function toggleSidebar() {
   const sb = document.getElementById('sidebar');
   const bd = document.getElementById('sidebarBackdrop');
+  const btn = document.getElementById('sidebarFloatToggle');
   const isOpen = sb.classList.toggle('mobile-open');
   bd.classList.toggle('show', isOpen);
+  if (btn) {
+    btn.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-folder-tree"></i>';
+    btn.title = isOpen ? '关闭目录' : '打开目录';
+  }
 }
 
 // === Keyboard Shortcuts ===
@@ -836,6 +850,11 @@ async function init() {
   const token = localStorage.getItem('ct_token');
   if (token) statusToken.textContent = token.includes('PRE') ? '会员用户' : '普通用户';
   await loadCatalog();
+  // Auto-open sidebar on mobile so users see the tree
+  if (window.innerWidth <= 760) {
+    document.getElementById('sidebar').classList.add('mobile-open');
+    document.getElementById('sidebarBackdrop').classList.add('show');
+  }
   enableSplitters();
   attachAnnotationEvents();
 
