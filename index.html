@@ -67,9 +67,9 @@ button,input{font:inherit}
 .tree-node.level-2>.tree-label{padding-left:30px}
 .tree-node.level-3>.tree-label{padding-left:44px}
 
-/* 展开状态样式 */
-.tree-node.expanded>.tree-label .folder-icon::before{content:'\f07c'}
-.tree-node:not(.expanded)>.tree-label .folder-icon::before{content:'\f07b'}
+/* 展开状态样式 - 一级目录默认展开 */
+.tree-node.expanded>.tree-label .tree-arrow{transform:rotate(90deg)}
+.tree-node:not(.expanded)>.tree-label .tree-arrow{transform:rotate(0deg)}
 
 .highlight-match{background:rgba(124,93,252,.45);color:#fff;border-radius:3px;padding:0 2px}
 .splitter-v{width:6px;background:transparent;cursor:col-resize;transition:background .2s}
@@ -392,15 +392,18 @@ function renderTree(list) {
   list.forEach(l1 => {
     const node1 = createTreeNode(l1.label, 1, l1.children?.length || 0);
     const ch1 = document.createElement('div');
-    ch1.className = 'tree-children';
+    ch1.className = 'tree-children open'; // 默认展开一级目录
+    
     (l1.children || []).forEach(l2 => {
       const node2 = createTreeNode(l2.label, 2, l2.children?.length || 0);
       const ch2 = document.createElement('div');
       ch2.className = 'tree-children';
+      
       (l2.children || []).forEach(leaf => {
         const leafNode = createTreeNode(leaf.title, 3, 0, leaf);
         ch2.appendChild(leafNode);
       });
+      
       node2.appendChild(ch2);
       // 点击文件夹切换展开
       node2.querySelector('.tree-label').addEventListener('click', ev => {
@@ -409,8 +412,9 @@ function renderTree(list) {
       });
       ch1.appendChild(node2);
     });
+    
     node1.appendChild(ch1);
-    // 点击文件夹切换展开
+    // 点击一级文件夹切换展开
     node1.querySelector('.tree-label').addEventListener('click', ev => {
       ev.stopPropagation();
       toggleChildren(ch1, node1);
@@ -429,7 +433,6 @@ function escapeHtml(str) {
 function createTreeNode(name, level, childCount, leafData = null) {
   const node = document.createElement('div');
   node.className = `tree-node level-${level}`;
-  if (!leafData) node.classList.add('expanded'); // 默认展开文件夹
   
   const label = document.createElement('div');
   label.className = 'tree-label';
@@ -981,5 +984,7 @@ async function init() {
 
 init();
 </script>
+
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"f6db73e1-f152-4d1a-b7f6-28a5c06b14f8","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"ab3ad240-5fa8-4b6a-87a0-63500ecaff2f","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>
