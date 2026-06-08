@@ -91,6 +91,11 @@ button,input{font:inherit}
 .tbtn{width:38px;height:38px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.04);color:#c7d1f4;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
 .tbtn:hover{border-color:rgba(124,93,252,.35);background:rgba(124,93,252,.12);color:#fff}
 .tbtn.active{background:#7c5dfc;color:#fff;border-color:#7c5dfc}
+/* Color Picker */
+.color-picker-wrap{position:relative}
+.color-palette{position:absolute;top:calc(100% + 8px);left:0;background:rgba(20,30,60,.98);border:1px solid rgba(124,93,252,.25);border-radius:12px;padding:10px;box-shadow:0 8px 32px rgba(0,0,0,.3);z-index:100;min-width:160px}
+.color-row{display:flex;gap:6px;margin-bottom:6px}.color-row:last-child{margin-bottom:0}
+.color-item{width:24px;height:24px;border-radius:8px;cursor:pointer;transition:transform .2s,box-shadow .2s;border:2px solid transparent}.color-item:hover{transform:scale(1.2);box-shadow:0 0 12px rgba(124,93,252,.4)}.color-item.selected{border-color:#7c5dfc;box-shadow:0 0 0 2px rgba(124,93,252,.3)}
 .tool-sep{width:1px;height:24px;background:rgba(255,255,255,.1);flex-shrink:0}
 .zoom-info{font-size:12px;color:#9fb4d8;min-width:58px;text-align:center}
 .page-info{display:flex;align-items:center;gap:8px;margin-left:auto;color:#9fb4d8;font-size:12px;flex-shrink:0}
@@ -207,10 +212,39 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
           <button class="tbtn" onclick="activateTool('pen')" id="btnPen" title="画笔"><i class="fas fa-pen"></i></button>
           <button class="tbtn" onclick="activateTool('text')" id="btnText" title="文字"><i class="fas fa-font"></i></button>
           <button class="tbtn" onclick="activateTool('eraser')" id="btnEraser" title="橡皮擦"><i class="fas fa-eraser"></i></button>
+          <div class="color-picker-wrap">
+            <button class="tbtn color-btn" id="colorPicker" onclick="toggleColorPicker()" title="选择颜色" style="padding:0;width:38px">
+              <div id="currentColor" style="width:100%;height:100%;border-radius:12px;background:#ff7f50"></div>
+            </button>
+            <div id="colorPalette" class="color-palette" style="display:none">
+              <div class="color-row">
+                <span class="color-item" style="background:#ff7f50" onclick="setColor('#ff7f50')"></span>
+                <span class="color-item" style="background:#ffd966" onclick="setColor('#ffd966')"></span>
+                <span class="color-item" style="background:#7bed9f" onclick="setColor('#7bed9f')"></span>
+                <span class="color-item" style="background:#70a1ff" onclick="setColor('#70a1ff')"></span>
+                <span class="color-item" style="background:#a29bfe" onclick="setColor('#a29bfe')"></span>
+              </div>
+              <div class="color-row">
+                <span class="color-item" style="background:#ff6b6b" onclick="setColor('#ff6b6b')"></span>
+                <span class="color-item" style="background:#fd79a8" onclick="setColor('#fd79a8')"></span>
+                <span class="color-item" style="background:#00cec9" onclick="setColor('#00cec9')"></span>
+                <span class="color-item" style="background:#6c5ce7" onclick="setColor('#6c5ce7')"></span>
+                <span class="color-item" style="background:#ffffff" onclick="setColor('#ffffff')"></span>
+              </div>
+              <div class="color-row">
+                <span class="color-item" style="background:#2d3436" onclick="setColor('#2d3436')"></span>
+                <span class="color-item" style="background:#636e72" onclick="setColor('#636e72')"></span>
+                <span class="color-item" style="background:#b2bec3" onclick="setColor('#b2bec3')"></span>
+                <span class="color-item" style="background:#fdcb6e" onclick="setColor('#fdcb6e')"></span>
+                <span class="color-item" style="background:#e17055" onclick="setColor('#e17055')"></span>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="tool-group">
           <button class="tbtn" onclick="undoAction()" title="撤销"><i class="fas fa-undo"></i></button>
           <button class="tbtn" onclick="redoAction()" title="重做"><i class="fas fa-redo"></i></button>
+          <button class="tbtn" onclick="clearAllAnnotations()" title="清除所有标注"><i class="fas fa-trash"></i></button>
         </div>
         <div class="tool-sep"></div>
         <div class="tool-group">
@@ -274,7 +308,7 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 </div>
 <div class="toast" id="toast"></div>
 <div class="shortcut-hint" id="shortcutHint">
-  <h4><i class="fas fa-keyboard"></i> 快捷键 <span style="font-size:11px;color:#ffd166;float:right;">需授权</span></h4>
+  <h4><i class="fas fa-keyboard"></i> 快捷键</h4>
   <div><span>上一页</span><kbd>←</kbd> <kbd>PgUp</kbd></div>
   <div><span>下一页</span><kbd>→</kbd> <kbd>PgDn</kbd> <kbd>Space</kbd></div>
   <div><span>第一页</span><kbd>Home</kbd></div>
@@ -287,16 +321,13 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
   <div><span>目录</span><kbd>T</kbd></div>
   <div><span>搜索</span><kbd>/</kbd></div>
   <div><span>跳转页码</span><kbd>G</kbd></div>
-  <div><span>快捷键帮助</span><kbd>?</kbd> <span style="font-size:10px;color:#8f98c8;">(无需授权)</span></div>
+  <div><span>快捷键帮助</span><kbd>?</kbd></div>
   <div><span>退出全屏</span><kbd>Esc</kbd></div>
   <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1);font-size:11px;color:#8f98c8;">
     提示：数字键 1-9 可快速跳转到第 n×10 页
   </div>
   <div style="margin-top:8px;font-size:11px;color:#8f98c8;">
     Ctrl/Cmd 组合键：F搜索、B书签、T目录、M全屏
-  </div>
-  <div style="margin-top:8px;font-size:11px;color:#ffd166;">
-    ⚠️ 所有功能需要设置Token后才能使用
   </div>
 </div>
 <button class="sidebar-float-toggle" id="sidebarFloatToggle" onclick="toggleSidebar()" title="打开目录"><i class="fas fa-folder-tree"></i></button>
@@ -832,12 +863,44 @@ async function zoomFit() {
 }
 
 // === Annotation Tools ===
+let currentColor = '#ff7f50';
+
+function toggleColorPicker() {
+  const palette = document.getElementById('colorPalette');
+  palette.style.display = palette.style.display === 'none' ? 'block' : 'none';
+}
+
+function setColor(color) {
+  currentColor = color;
+  document.getElementById('currentColor').style.background = color;
+  document.querySelectorAll('.color-item').forEach(el => el.classList.remove('selected'));
+  document.querySelector(`.color-item[style="background:${color}"]`)?.classList.add('selected');
+  document.getElementById('colorPalette').style.display = 'none';
+  showToast(`已选择颜色`);
+}
+
+// 点击其他地方关闭颜色选择器
+document.addEventListener('click', (e) => {
+  const palette = document.getElementById('colorPalette');
+  const picker = document.getElementById('colorPicker');
+  if (palette && palette.style.display === 'block' && !picker.contains(e.target)) {
+    palette.style.display = 'none';
+  }
+});
+
 function activateTool(tool) {
+  // 取消当前正在进行的绘制
+  if (drawing && currentStroke) {
+    drawing = false;
+    currentStroke = null;
+  }
   activeTool = activeTool === tool ? null : tool;
   ['btnAnnotate', 'btnPen', 'btnText', 'btnEraser'].forEach(id => document.getElementById(id).classList.remove('active'));
   if (activeTool) {
     document.getElementById(`btn${tool.charAt(0).toUpperCase() + tool.slice(1)}`).classList.add('active');
     showToast(`${{ annotate: '标注', pen: '画笔', text: '文字', eraser: '橡皮擦' }[tool]} 已激活`);
+  } else {
+    showToast('已取消工具选择');
   }
 }
 function undoAction() {
@@ -851,6 +914,14 @@ function redoAction() {
   annotationActions.push(futureStack.pop());
   saveAnnotations(); drawAnnotations();
   showToast('已重做');
+}
+function clearAllAnnotations() {
+  if (!annotationActions.length) { showToast('没有可清除的标注'); return; }
+  if (confirm('确定要清除所有标注吗？此操作无法撤销。')) {
+    resetHistory();
+    saveAnnotations();
+    showToast('所有标注已清除');
+  }
 }
 function attachAnnotationEvents() {
   annotationCanvas.addEventListener('pointerdown', handlePointerDown);
@@ -866,7 +937,7 @@ function handlePointerDown(event) {
   if (activeTool === 'text') {
     const text = prompt('请输入文字：', '');
     if (text) {
-      const action = { type: 'text', page: currentPage, x, y, text, color: '#ffd966', font: '18px sans-serif' };
+      const action = { type: 'text', page: currentPage, x, y, text, color: currentColor, font: '18px sans-serif' };
       annotationActions.push(action); historyStack.push(action); futureStack = [];
       saveAnnotations(); drawAnnotations(); showToast('文字已添加');
     }
@@ -874,13 +945,23 @@ function handlePointerDown(event) {
   }
   drawing = true;
   const t = activeTool === 'eraser' ? 'eraser' : activeTool === 'annotate' ? 'highlight' : 'pen';
+  // 使用当前颜色，高亮模式添加透明度
+  const strokeColor = t === 'highlight' ? hexToRgba(currentColor, 0.35) : t === 'eraser' ? 'rgba(0,0,0,1)' : currentColor;
   currentStroke = {
     type: t, page: currentPage,
-    color: t === 'highlight' ? 'rgba(255,233,102,0.35)' : t === 'eraser' ? 'rgba(0,0,0,1)' : '#ff7f50',
+    color: strokeColor,
     lineWidth: t === 'eraser' ? 28 : t === 'highlight' ? 28 : 3,
     composite: t === 'eraser' ? 'destination-out' : 'source-over',
     path: [{ x, y }]
   };
+}
+
+// 十六进制颜色转RGBA
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
 }
 function handlePointerMove(event) {
   if (!drawing || !currentStroke) return;
@@ -977,14 +1058,9 @@ function toggleShortcuts() {
   document.getElementById('shortcutHint').classList.toggle('show');
 }
 
-// 授权检查辅助函数
+// 授权检查辅助函数 - 核心功能现已免费开放
 function requireAuth() {
-  const token = localStorage.getItem('ct_token');
-  if (!token) {
-    showToast('⚠️ 请先设置 Token 以使用此功能');
-    showTokenModal();
-    return false;
-  }
+  // 核心功能已免费开放，Token仅用于展示用户状态
   return true;
 }
 
@@ -1305,6 +1381,8 @@ try {
 
 
 
-<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"8acdd492-21c1-4e8e-afcd-b88f31580c9c","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"d7fb1d9b-6d65-4da3-a581-2c9f93fa1393","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
+
+
+<!-- AIGC: {"Label":"value1","ContentProducer":"001191110000802100433B11010001191110000802100433B11010","ProduceID":"450dfa5a-7ab7-425d-a1c0-221087879ee8","ReservedCode1":"72dafc97cd38b92e5f3d5cdfd0dfbbe6","ContentPropagator":"001191110000802100433B11010001191110000802100433B11010","PropagateID":"d7eb6093-56e1-4dc7-90fa-94abbf275929","ReservedCode2":"2734827274df537123a472bf4de01eb5"} -->
 </body>
 </html>

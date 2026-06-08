@@ -1,23 +1,11 @@
-// === 授权检查 ===
+// === 授权检查 - 核心功能现已免费开放 ===
 function checkAuthorization() {
-  const token = localStorage.getItem('ct_token');
-  if (!token) {
-    showToast('⚠️ 请先设置 Token 以使用此功能');
-    if (typeof showTokenModal === 'function') {
-      showTokenModal();
-    }
-    return false;
-  }
+  // 核心功能已免费开放，Token仅用于展示用户状态
   return true;
 }
 
 // === 右键菜单功能 ===
 function showContextMenu(x, y) {
-  // 检查授权
-  if (!checkAuthorization()) {
-    return;
-  }
-  
   const menu = document.getElementById('contextMenu');
   if (!menu) return;
   
@@ -44,11 +32,6 @@ function showContextMenu(x, y) {
 function contextMenuAction(action) {
   const menu = document.getElementById('contextMenu');
   if (menu) menu.style.display = 'none';
-  
-  // 所有操作都需要授权
-  if (!checkAuthorization()) {
-    return;
-  }
   
   switch(action) {
     case 'zoomIn': 
