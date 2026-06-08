@@ -1850,16 +1850,38 @@ function shareDocument() {
   if (!current) { showToast('请先选择教材'); return; }
   updateHash();
   const url = window.location.href;
+  const title = current.title || '中国教材电子课本';
+  const text = `📚 ${title}\n点击在线阅读：`;
+  
+  // 优先使用 Web Share API（现代浏览器支持）
+  if (navigator.share) {
+    navigator.share({
+      title: title,
+      text: text,
+      url: url
+    }).then(() => {
+      showToast('分享成功');
+    }).catch((err) => {
+      // 用户取消分享或分享失败，回退到复制链接
+      console.log('分享取消或失败:', err);
+      copyToClipboard(url);
+    });
+    return;
+  }
   
   // 老浏览器兼容性处理
+  copyToClipboard(url);
+}
+
+function copyToClipboard(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(() => {
+    navigator.clipboard.writeText(text).then(() => {
       showToast('已复制分享链接');
     }).catch(() => {
-      fallbackCopy(url);
+      fallbackCopy(text);
     });
   } else {
-    fallbackCopy(url);
+    fallbackCopy(text);
   }
 }
 
