@@ -35,18 +35,43 @@ button,input{font:inherit}
 .tree-wrap{flex:1;overflow:auto;padding:8px 0 14px}
 .tree-wrap::-webkit-scrollbar{width:8px}
 .tree-wrap::-webkit-scrollbar-thumb{background:rgba(124,93,252,.35);border-radius:999px}
-.t-label{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:0;cursor:pointer;transition:background .2s,color .2s;padding-left:14px;color:#c8d1f3;position:relative;font-size:13px}
-.t-label:hover{background:rgba(255,255,255,.06)}
-.t-label.active{color:#fff;background:rgba(124,93,252,.18)}
-.t-label .t-arrow{width:18px;display:flex;align-items:center;justify-content:center;color:#9ca8dc;transition:transform .2s;font-size:10px}
-.t-folder,.t-leaf{display:flex;align-items:center;gap:8px;flex:1}
-.t-folder .t-icon,.t-leaf .t-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;color:#7c5dfc}
-.t-folder .t-name,.t-leaf .t-name{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
-.t-folder{padding-left:6px;border-radius:10px}
-.t-leaf{padding-left:28px;border-radius:8px}
-.t-children{display:none;flex-direction:column;margin-left:20px;border-left:1px solid rgba(255,255,255,.08);padding-left:10px}
-.t-children.open{display:flex}
-.highlight-match{background:rgba(124,93,252,.35);color:#fff;border-radius:3px;padding:0 2px}
+
+/* Windows资源管理器风格树形结构 */
+.tree-node{position:relative;margin:1px 0}
+.tree-label{display:flex;align-items:center;gap:6px;padding:7px 10px 7px 16px;cursor:pointer;transition:background .2s,color .2s;color:#d4dbf0;position:relative;font-size:13px;border-radius:8px;user-select:none}
+.tree-label:hover{background:rgba(255,255,255,.08);color:#fff}
+.tree-label.active{color:#fff;background:rgba(124,93,252,.22)}
+.tree-label.selected{color:#fff;background:rgba(124,93,252,.35)}
+
+.tree-arrow{width:18px;height:18px;display:flex;align-items:center;justify-content:center;color:#a8b4d8;transition:transform .2s;font-size:9px;flex-shrink:0}
+.tree-arrow.rotated{transform:rotate(90deg)}
+.tree-arrow.empty{visibility:hidden}
+
+.tree-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tree-icon.folder{color:#ffd166}
+.tree-icon.file{color:#7c5dfc}
+.tree-icon.level-1{color:#ffd166}
+.tree-icon.level-2{color:#6bb3ff}
+.tree-icon.level-3{color:#8f9cf5}
+
+.tree-name{flex:1;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;line-height:1.4}
+
+.tree-count{font-size:11px;color:#8f98c8;background:rgba(255,255,255,.08);padding:2px 7px;border-radius:10px;flex-shrink:0}
+
+.tree-children{display:none;flex-direction:column;position:relative}
+.tree-children.open{display:flex}
+
+/* 连接线效果 */
+.tree-children::before{content:'';position:absolute;left:22px;top:0;bottom:8px;width:1px;background:rgba(255,255,255,.1)}
+
+.tree-node.level-2>.tree-label{padding-left:30px}
+.tree-node.level-3>.tree-label{padding-left:44px}
+
+/* 展开状态样式 */
+.tree-node.expanded>.tree-label .folder-icon::before{content:'\f07c'}
+.tree-node:not(.expanded)>.tree-label .folder-icon::before{content:'\f07b'}
+
+.highlight-match{background:rgba(124,93,252,.45);color:#fff;border-radius:3px;padding:0 2px}
 .splitter-v{width:6px;background:transparent;cursor:col-resize;transition:background .2s}
 .splitter-v:hover{background:rgba(124,93,252,.12)}
 /* Thumbnail Panel */
@@ -355,7 +380,7 @@ function updateThumbBookmarks() {
   });
 }
 
-// === Tree Rendering ===
+// === Tree Rendering (Windows Explorer Style) ===
 function renderTree(list) {
   treeWrap.innerHTML = '';
   catalogCount.textContent = flattenCount(list);
@@ -365,48 +390,105 @@ function renderTree(list) {
   }
   const frag = document.createDocumentFragment();
   list.forEach(l1 => {
-    const node1 = createTreeNode(l1.label, false);
+    const node1 = createTreeNode(l1.label, 1, l1.children?.length || 0);
     const ch1 = document.createElement('div');
-    ch1.className = 't-children';
+    ch1.className = 'tree-children';
     (l1.children || []).forEach(l2 => {
-      const node2 = createTreeNode(l2.label, false);
+      const node2 = createTreeNode(l2.label, 2, l2.children?.length || 0);
       const ch2 = document.createElement('div');
-      ch2.className = 't-children';
+      ch2.className = 'tree-children';
       (l2.children || []).forEach(leaf => {
-        const leafNode = createTreeNode(leaf.title, true);
-        leafNode.dataset.pdf = leaf.pdf || '';
-        leafNode.onclick = e => { e.stopPropagation(); selectFile(leaf, leafNode); };
+        const leafNode = createTreeNode(leaf.title, 3, 0, leaf);
         ch2.appendChild(leafNode);
       });
       node2.appendChild(ch2);
-      node2.querySelector('.t-arrow')?.addEventListener('click', ev => { ev.stopPropagation(); toggleChildren(ch2, node2); });
+      // 点击文件夹切换展开
+      node2.querySelector('.tree-label').addEventListener('click', ev => {
+        ev.stopPropagation();
+        toggleChildren(ch2, node2);
+      });
       ch1.appendChild(node2);
     });
     node1.appendChild(ch1);
-    node1.querySelector('.t-arrow')?.addEventListener('click', ev => { ev.stopPropagation(); toggleChildren(ch1, node1); });
+    // 点击文件夹切换展开
+    node1.querySelector('.tree-label').addEventListener('click', ev => {
+      ev.stopPropagation();
+      toggleChildren(ch1, node1);
+    });
     frag.appendChild(node1);
   });
   treeWrap.appendChild(frag);
 }
+
 function escapeHtml(str) {
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
 }
-function createTreeNode(name, isLeaf) {
-  const el = document.createElement('div');
-  el.className = isLeaf ? 't-label t-leaf' : 't-label t-folder';
+
+function createTreeNode(name, level, childCount, leafData = null) {
+  const node = document.createElement('div');
+  node.className = `tree-node level-${level}`;
+  if (!leafData) node.classList.add('expanded'); // 默认展开文件夹
+  
+  const label = document.createElement('div');
+  label.className = 'tree-label';
+  
+  const isFolder = !leafData;
   const safeName = escapeHtml(name);
-  el.innerHTML = isLeaf
-    ? `<div class="t-arrow"></div><div class="t-icon"><i class="fas fa-file-alt"></i></div><div class="t-name">${safeName}</div>`
-    : `<div class="t-arrow">▶</div><div class="t-icon"><i class="fas fa-folder"></i></div><div class="t-name">${safeName}</div>`;
-  return el;
+  
+  // 箭头（仅文件夹有）
+  const arrowHtml = isFolder 
+    ? `<div class="tree-arrow ${childCount === 0 ? 'empty' : ''}"><i class="fas fa-chevron-right"></i></div>`
+    : `<div class="tree-arrow empty"></div>`;
+  
+  // 图标
+  const iconClass = isFolder ? `tree-icon folder level-${level}` : 'tree-icon file';
+  const iconFa = isFolder ? 'fa-folder-open' : 'fa-file-pdf';
+  const iconHtml = `<div class="${iconClass}"><i class="fas ${iconFa}"></i></div>`;
+  
+  // 名称
+  const nameHtml = `<div class="tree-name">${safeName}</div>`;
+  
+  // 数量徽章（仅文件夹有且数量>0）
+  const badgeHtml = isFolder && childCount > 0 
+    ? `<div class="tree-count">${childCount}</div>` 
+    : '';
+  
+  label.innerHTML = `${arrowHtml}${iconHtml}${nameHtml}${badgeHtml}`;
+  node.appendChild(label);
+  
+  // 文件点击选择
+  if (leafData) {
+    label.onclick = e => {
+      e.stopPropagation();
+      selectFile(leafData, label);
+    };
+  }
+  
+  return node;
 }
+
 function toggleChildren(container, nodeEl) {
-  const arrow = nodeEl.querySelector('.t-arrow');
   const isOpen = container.classList.toggle('open');
-  if (arrow) arrow.textContent = isOpen ? '▼' : '▶';
+  nodeEl.classList.toggle('expanded', isOpen);
+  const arrow = nodeEl.querySelector('.tree-arrow');
+  if (arrow) {
+    arrow.classList.toggle('rotated', isOpen);
+  }
+  // 切换文件夹图标
+  const icon = nodeEl.querySelector('.tree-icon i');
+  if (icon) {
+    if (isOpen) {
+      icon.classList.remove('fa-folder');
+      icon.classList.add('fa-folder-open');
+    } else {
+      icon.classList.remove('fa-folder-open');
+      icon.classList.add('fa-folder');
+    }
+  }
 }
+
 function flattenCount(list) {
   let c = 0;
   (list || []).forEach(l1 => (l1.children || []).forEach(l2 => { c += (l2.children || []).length; }));
@@ -459,10 +541,10 @@ function filterCatalog(nodes, q) {
 }
 
 // === File Selection ===
-function selectFile(item, nodeEl) {
+function selectFile(item, labelEl) {
   current = item;
-  document.querySelectorAll('.t-label.active').forEach(n => n.classList.remove('active'));
-  if (nodeEl) nodeEl.classList.add('active');
+  document.querySelectorAll('.tree-label.selected').forEach(n => n.classList.remove('selected'));
+  if (labelEl) labelEl.classList.add('selected');
   statusFile.textContent = item.title;
   statusSize.textContent = item.size || '';
   statusZoom.textContent = '';
