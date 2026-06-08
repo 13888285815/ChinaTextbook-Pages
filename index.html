@@ -570,11 +570,13 @@ if (typeof URL.parse !== 'function') {
 }
 </script>
 <script src="context-menu.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js" onload="console.log('PDF.js loaded successfully')" onerror="console.error('PDF.js CDN load failed')"></script>
 <script>
-  // PDF.js configuration for iOS Safari compatibility
+let pdfjsLoaded = false;
+window.addEventListener('load', () => {
   if (typeof pdfjsLib !== 'undefined') {
-    // Disable worker for iOS Safari to avoid memory and rendering issues
+    pdfjsLoaded = true;
+    // PDF.js configuration for iOS Safari compatibility
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isMobile = 'ontouchstart' in window || navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/);
     
@@ -1133,8 +1135,24 @@ function selectFile(item, labelEl) {
 
 // === PDF Preview ===
 async function showPreview(src) {
+  console.log('showPreview called with:', src);
+  
   if (!src) {
     showToast('PDF地址为空');
+    return;
+  }
+  
+  // 检查PDF.js是否加载
+  if (typeof pdfjsLib === 'undefined') {
+    showToast('PDF查看器正在初始化，请稍候重试');
+    console.error('PDF.js not loaded');
+    
+    // 尝试重新加载PDF.js
+    setTimeout(() => {
+      if (typeof pdfjsLib !== 'undefined') {
+        showPreview(src);
+      }
+    }, 1000);
     return;
   }
   
@@ -1169,43 +1187,29 @@ async function showPreview(src) {
     // PDF配置 - 针对iOS Safari做特殊优化
     const pdfConfig = { 
       url: src, 
-      cMapUrl: './pdfjs/cmaps/', 
-      cMapPacked: true,
       withCredentials: false,
       disableFontFace: true,
       useSystemFonts: true,
       maxImageSize: 1024,
-      stopAtErrors: false
+      stopAtErrors: false,
+      workerSrc: '',
+      disableWorker: true
     };
     
-    // iOS Safari 必须禁用worker
-    if (isIOS) {
-      pdfConfig.workerSrc = '';
-      pdfConfig.disableWorker = true;
-      console.log('iOS Safari detected: worker disabled');
-    } else if ('ontouchstart' in window || navigator.userAgent.match(/Android/)) {
-      pdfConfig.workerSrc = '';
-    }
+    console.log('PDF配置:', pdfConfig);
     
-    // 使用异步方式加载PDF，避免iOS主线程阻塞
-    let loadingTask;
-    try {
-      loadingTask = pdfjsLib.getDocument(pdfConfig);
-      pdfDoc = await loadingTask.promise;
-    } catch (initialError) {
-      console.warn('Initial load failed, retrying without CMap:', initialError);
-      // 重试：禁用CMaps以提高兼容性
-      const retryConfig = { 
-        url: src, 
-        withCredentials: false,
-        disableFontFace: true,
-        useSystemFonts: true,
-        workerSrc: '',
-        disableWorker: true
-      };
-      loadingTask = pdfjsLib.getDocument(retryConfig);
-      pdfDoc = await loadingTask.promise;
-    }
+    // 使用异步方式加载PDF，避免主线程阻塞
+    const loadingTask = pdfjsLib.getDocument(pdfConfig);
+    
+    loadingTask.onProgress = (progress) => {
+      console.log('PDF加载进度:', progress);
+      if (progress && progress.loaded && progress.total) {
+        const percent = Math.round((progress.loaded / progress.total) * 100);
+        loadingText.textContent = `正在加载 PDF... ${percent}%`;
+      }
+    };
+    
+    pdfDoc = await loadingTask.promise;
     
     console.log('PDF加载成功，页数:', pdfDoc.numPages);
     
@@ -1224,6 +1228,7 @@ async function showPreview(src) {
     showToast(`PDF 已加载（${pageCount} 页）`);
   } catch (e) {
     console.error('PDF加载失败:', e);
+    console.error('错误堆栈:', e.stack);
     hideLoading();
     
     let errorMsg = 'PDF 加载失败';
@@ -1231,13 +1236,15 @@ async function showPreview(src) {
       if (e.message.includes('Missing PDF') || e.message.includes('404')) {
         errorMsg = 'PDF文件不存在或地址错误';
       } else if (e.message.includes('CORS') || e.message.includes('Access-Control')) {
-        errorMsg = '跨域访问被拒绝';
+        errorMsg = '跨域访问被拒绝，请检查网络设置';
       } else if (e.message.includes('network') || e.message.includes('fetch') || e.message.includes('request') || e.message.includes('Failed to fetch')) {
         errorMsg = '网络错误，请检查网络连接';
       } else if (e.message.includes('Unexpected server response')) {
         errorMsg = '服务器响应异常，请稍后重试';
       } else if (e.message.includes('Invalid PDF') || e.message.includes('Corrupt')) {
         errorMsg = 'PDF文件损坏或格式不正确';
+      } else if (e.message.includes('Failed to fetch') || e.message.includes('NetworkError')) {
+        errorMsg = '网络请求失败，请检查网络连接或稍后重试';
       } else {
         errorMsg = 'PDF加载失败: ' + e.message;
       }

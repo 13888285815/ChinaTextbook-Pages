@@ -1,0 +1,23 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e10]:
+      - combobox "在 Google 中搜索或输入网址" [ref=e11]
+      - generic:
+        - button "语音搜索" [ref=e13] [cursor=pointer]
+        - button "按图搜索" [ref=e15] [cursor=pointer]
+    - generic [ref=e17]:
+      - generic "应用商店" [ref=e18] [cursor=pointer]:
+        - link "应用商店" [ref=e19]:
+          - /url: https://chrome.google.com/webstore?hl=zh-CN
+        - button "可对“应用商店”快捷方式执行的更多操作" [ref=e20]
+        - generic [ref=e23]: 应用商店
+      - button "添加快捷方式" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]: 添加快捷方式
+      - generic:
+        - generic: 取消
+        - generic: 完成
+    - button "自定义 Chrome" [ref=e32] [cursor=pointer]:
+      - generic [ref=e33]:
+        - img
+      - generic [ref=e35]: 自定义 Chrome
+  - img [ref=e37]

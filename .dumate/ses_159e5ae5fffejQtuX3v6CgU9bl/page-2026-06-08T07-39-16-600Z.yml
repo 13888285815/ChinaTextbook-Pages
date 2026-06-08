@@ -1,0 +1,656 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2F13888285815%2FChinaTextbook-Pages
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=13888285815%2FChinaTextbook-Pages
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - link "13888285815" [ref=e70] [cursor=pointer]:
+            - /url: /13888285815
+          - generic [ref=e71]: /
+          - strong [ref=e72]:
+            - link "ChinaTextbook-Pages" [ref=e73] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages
+          - generic [ref=e74]: Public
+        - generic [ref=e75]:
+          - list:
+            - listitem [ref=e76]:
+              - link "You must be signed in to change notification settings" [ref=e77] [cursor=pointer]:
+                - /url: /login?return_to=%2F13888285815%2FChinaTextbook-Pages
+                - img [ref=e78]
+                - text: Notifications
+            - listitem [ref=e80]:
+              - link "Fork 0" [ref=e81] [cursor=pointer]:
+                - /url: /login?return_to=%2F13888285815%2FChinaTextbook-Pages
+                - img [ref=e82]
+                - text: Fork
+                - generic "0" [ref=e84]
+            - listitem [ref=e85]:
+              - link "You must be signed in to star a repository" [ref=e87] [cursor=pointer]:
+                - /url: /login?return_to=%2F13888285815%2FChinaTextbook-Pages
+                - img [ref=e88]
+                - text: Star
+                - generic "0 users starred this repository" [ref=e90]: "0"
+      - navigation "Repository" [ref=e91]:
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Code" [ref=e94] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages
+              - img [ref=e95]
+              - generic [ref=e97]: Code
+          - listitem [ref=e98]:
+            - link "Issues" [ref=e99] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/issues
+              - img [ref=e100]
+              - generic [ref=e103]: Issues
+          - listitem [ref=e104]:
+            - link "Pull requests" [ref=e105] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/pulls
+              - img [ref=e106]
+              - generic [ref=e108]: Pull requests
+          - listitem [ref=e109]:
+            - link "Actions" [ref=e110] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/actions
+              - img [ref=e111]
+              - generic [ref=e113]: Actions
+          - listitem [ref=e114]:
+            - link "Projects" [ref=e115] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/projects
+              - img [ref=e116]
+              - generic [ref=e118]: Projects
+          - listitem [ref=e119]:
+            - link "Security and quality" [ref=e120] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/security
+              - img [ref=e121]
+              - generic [ref=e123]: Security and quality
+          - listitem [ref=e124]:
+            - link "Insights" [ref=e125] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/pulse
+              - img [ref=e126]
+              - generic [ref=e128]: Insights
+    - generic [ref=e141]:
+      - heading "13888285815/ChinaTextbook-Pages" [level=1] [ref=e143]
+      - generic [ref=e144]:
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - button "main branch" [ref=e151] [cursor=pointer]:
+                - generic [ref=e152]:
+                  - generic [ref=e154]:
+                    - img [ref=e156]
+                    - generic [ref=e159]: main
+                  - generic:
+                    - img
+              - generic [ref=e160]:
+                - link "Branches" [ref=e161] [cursor=pointer]:
+                  - /url: /13888285815/ChinaTextbook-Pages/branches
+                  - generic [ref=e162]:
+                    - generic:
+                      - img
+                    - generic [ref=e163]: Branches
+                - link "Tags" [ref=e164] [cursor=pointer]:
+                  - /url: /13888285815/ChinaTextbook-Pages/tags
+                  - generic [ref=e165]:
+                    - generic:
+                      - img
+                    - generic [ref=e166]: Tags
+            - generic [ref=e167]:
+              - generic [ref=e171]:
+                - img [ref=e173]
+                - combobox "Go to file" [ref=e175]
+              - button "Code" [ref=e176] [cursor=pointer]:
+                - generic [ref=e177]:
+                  - generic:
+                    - img
+                  - generic [ref=e178]: Code
+                  - generic:
+                    - img
+          - generic [ref=e179]:
+            - generic [ref=e180]:
+              - heading "Folders and files" [level=2] [ref=e181]
+              - table "Folders and files" [ref=e182]:
+                - rowgroup:
+                  - row "Name Last commit message Last commit date":
+                    - columnheader "Name"
+                    - columnheader "Last commit message":
+                      - generic "Last commit message"
+                    - columnheader "Last commit date":
+                      - generic "Last commit date"
+                - rowgroup [ref=e183]:
+                  - row "Latest commit History 31 Commits" [ref=e184]:
+                    - cell "Latest commit History 31 Commits" [ref=e185]:
+                      - generic [ref=e186]:
+                        - heading "Latest commit" [level=2] [ref=e187]
+                        - generic [ref=e190]:
+                          - heading "History" [level=2] [ref=e191]
+                          - link "31 Commits" [ref=e192] [cursor=pointer]:
+                            - /url: /13888285815/ChinaTextbook-Pages/commits/main/
+                            - generic [ref=e193]:
+                              - generic:
+                                - img
+                              - generic [ref=e194]: 31 Commits
+                  - row ".github/workflows, (Directory)" [ref=e195]:
+                    - cell ".github/workflows, (Directory)" [ref=e196]:
+                      - generic [ref=e197]:
+                        - img [ref=e198]
+                        - link ".github/workflows, (Directory)" [ref=e203] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/tree/main/.github/workflows
+                          - text: .github/workflows
+                    - cell [ref=e204]
+                    - cell [ref=e206]
+                  - row ".vercel-tmp, (Directory)" [ref=e209]:
+                    - cell ".vercel-tmp, (Directory)" [ref=e210]:
+                      - generic [ref=e211]:
+                        - img [ref=e212]
+                        - link ".vercel-tmp, (Directory)" [ref=e217] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/tree/main/.vercel-tmp
+                          - text: .vercel-tmp
+                    - cell [ref=e218]
+                    - cell [ref=e220]
+                  - row "pdfjs, (Directory)" [ref=e223]:
+                    - cell "pdfjs, (Directory)" [ref=e224]:
+                      - generic [ref=e225]:
+                        - img [ref=e226]
+                        - link "pdfjs, (Directory)" [ref=e231] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/tree/main/pdfjs
+                          - text: pdfjs
+                    - cell [ref=e232]
+                    - cell [ref=e234]
+                  - row ".gitignore, (File)" [ref=e237]:
+                    - cell ".gitignore, (File)" [ref=e238]:
+                      - generic [ref=e239]:
+                        - img [ref=e240]
+                        - link ".gitignore, (File)" [ref=e245] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/.gitignore
+                          - text: .gitignore
+                    - cell [ref=e246]
+                    - cell [ref=e248]
+                  - row "README.md, (File)" [ref=e251]:
+                    - cell "README.md, (File)" [ref=e252]:
+                      - generic [ref=e253]:
+                        - img [ref=e254]
+                        - link "README.md, (File)" [ref=e259] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/README.md
+                          - text: README.md
+                    - cell [ref=e260]
+                    - cell [ref=e262]
+                  - row "catalog.json, (File)" [ref=e265]:
+                    - cell "catalog.json, (File)" [ref=e266]:
+                      - generic [ref=e267]:
+                        - img [ref=e268]
+                        - link "catalog.json, (File)" [ref=e273] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/catalog.json
+                          - text: catalog.json
+                    - cell [ref=e274]
+                    - cell [ref=e276]
+                  - row "context-menu.js, (File)" [ref=e279]:
+                    - cell "context-menu.js, (File)" [ref=e280]:
+                      - generic [ref=e281]:
+                        - img [ref=e282]
+                        - link "context-menu.js, (File)" [ref=e287] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/context-menu.js
+                          - text: context-menu.js
+                    - cell [ref=e288]
+                    - cell [ref=e290]
+                  - row "index.html, (File)" [ref=e293]:
+                    - cell "index.html, (File)" [ref=e294]:
+                      - generic [ref=e295]:
+                        - img [ref=e296]
+                        - link "index.html, (File)" [ref=e301] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/index.html
+                          - text: index.html
+                    - cell [ref=e302]
+                    - cell [ref=e304]
+                  - row "package.json, (File)" [ref=e307]:
+                    - cell "package.json, (File)" [ref=e308]:
+                      - generic [ref=e309]:
+                        - img [ref=e310]
+                        - link "package.json, (File)" [ref=e315] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/package.json
+                          - text: package.json
+                    - cell [ref=e316]
+                    - cell [ref=e318]
+                  - row "test.html, (File)" [ref=e321]:
+                    - cell "test.html, (File)" [ref=e322]:
+                      - generic [ref=e323]:
+                        - img [ref=e324]
+                        - link "test.html, (File)" [ref=e329] [cursor=pointer]:
+                          - /url: /13888285815/ChinaTextbook-Pages/blob/main/test.html
+                          - text: test.html
+                    - cell [ref=e330]
+                    - cell [ref=e332]
+            - generic [ref=e336]:
+              - generic [ref=e337]:
+                - heading "Repository files navigation" [level=2] [ref=e338]
+                - navigation "Repository files" [ref=e339]:
+                  - list [ref=e340]:
+                    - listitem [ref=e341]:
+                      - link "README" [ref=e342] [cursor=pointer]:
+                        - /url: "#"
+                        - img [ref=e344]
+                        - generic [ref=e346]: README
+                - button "Outline" [ref=e347] [cursor=pointer]:
+                  - img [ref=e348]
+              - article [ref=e351]:
+                - generic [ref=e352]:
+                  - heading "中国教材电子课本浏览系统" [level=1] [ref=e353]
+                  - 'link "Permalink: 中国教材电子课本浏览系统" [ref=e354] [cursor=pointer]':
+                    - /url: "#中国教材电子课本浏览系统"
+                    - img [ref=e355]
+                - paragraph [ref=e357]: 📚 一个现代化的中国教材PDF在线浏览系统，支持PDF阅读、标注、书签、缩略图等功能。
+                - generic [ref=e358]:
+                  - heading "🌐 在线演示" [level=2] [ref=e359]
+                  - 'link "Permalink: 🌐 在线演示" [ref=e360] [cursor=pointer]':
+                    - /url: "#-在线演示"
+                    - img [ref=e361]
+                - paragraph [ref=e363]:
+                  - strong [ref=e364]: GitHub Pages
+                  - text: ":"
+                  - link "https://13888285815.github.io/ChinaTextbook-Pages/" [ref=e365] [cursor=pointer]:
+                    - /url: https://13888285815.github.io/ChinaTextbook-Pages/
+                - generic [ref=e366]:
+                  - heading "✨ 功能特性" [level=2] [ref=e367]
+                  - 'link "Permalink: ✨ 功能特性" [ref=e368] [cursor=pointer]':
+                    - /url: "#-功能特性"
+                    - img [ref=e369]
+                - generic [ref=e371]:
+                  - heading "核心功能" [level=3] [ref=e372]
+                  - 'link "Permalink: 核心功能" [ref=e373] [cursor=pointer]':
+                    - /url: "#核心功能"
+                    - img [ref=e374]
+                - list [ref=e376]:
+                  - listitem [ref=e377]:
+                    - text: 📖
+                    - strong [ref=e378]: PDF在线浏览
+                    - text: "- 支持缩放、全屏、适应宽度等多种浏览模式"
+                  - listitem [ref=e379]:
+                    - text: 🎨
+                    - strong [ref=e380]: 标注工具
+                    - text: "- 高亮、画笔、文字、橡皮擦等标注功能"
+                  - listitem [ref=e381]:
+                    - text: 🔖
+                    - strong [ref=e382]: 书签管理
+                    - text: "- 自动保存阅读进度，支持快速跳转"
+                  - listitem [ref=e383]:
+                    - text: 🖼️
+                    - strong [ref=e384]: 缩略图预览
+                    - text: "- 懒加载技术，快速浏览所有页面"
+                  - listitem [ref=e385]:
+                    - text: 🔍
+                    - strong [ref=e386]: 全文搜索
+                    - text: "- 按教材名称、学科、版本搜索"
+                - generic [ref=e387]:
+                  - heading "用户体验" [level=3] [ref=e388]
+                  - 'link "Permalink: 用户体验" [ref=e389] [cursor=pointer]':
+                    - /url: "#用户体验"
+                    - img [ref=e390]
+                - list [ref=e392]:
+                  - listitem [ref=e393]:
+                    - text: ⌨️
+                    - strong [ref=e394]: 快捷键支持
+                    - text: "- 方向键翻页、F全屏、B书签等"
+                  - listitem [ref=e395]:
+                    - text: 📱
+                    - strong [ref=e396]: 移动端优化
+                    - text: "- 响应式设计，完美支持手机和平板"
+                  - listitem [ref=e397]:
+                    - text: 🌙
+                    - strong [ref=e398]: 护眼主题
+                    - text: "- 深色背景，减轻眼睛疲劳"
+                  - listitem [ref=e399]:
+                    - text: 💾
+                    - strong [ref=e400]: 本地存储
+                    - text: "- 标注和书签自动保存到本地"
+                - generic [ref=e401]:
+                  - heading "📚 教材资源" [level=2] [ref=e402]
+                  - 'link "Permalink: 📚 教材资源" [ref=e403] [cursor=pointer]':
+                    - /url: "#-教材资源"
+                    - img [ref=e404]
+                - paragraph [ref=e406]: 当前收录教材统计：
+                - list [ref=e407]:
+                  - listitem [ref=e408]:
+                    - strong [ref=e409]: 教材总数
+                    - text: ": 1977 套"
+                  - listitem [ref=e410]:
+                    - strong [ref=e411]: 分类
+                    - text: ": 7个一级分类（初中、高中、小学等）"
+                  - listitem [ref=e412]:
+                    - strong [ref=e413]: 来源
+                    - text: ": GitHub开源教材库"
+                - paragraph [ref=e414]: 支持教材类型：
+                - list [ref=e415]:
+                  - listitem [ref=e416]: 人文地理
+                  - listitem [ref=e417]: 体育与健康
+                  - listitem [ref=e418]: 数学
+                  - listitem [ref=e419]: 语文
+                  - listitem [ref=e420]: 英语
+                  - listitem [ref=e421]: 物理
+                  - listitem [ref=e422]: 化学
+                  - listitem [ref=e423]: 生物
+                  - listitem [ref=e424]: 历史
+                  - listitem [ref=e425]: 政治
+                - generic [ref=e426]:
+                  - heading "🚀 快速开始" [level=2] [ref=e427]
+                  - 'link "Permalink: 🚀 快速开始" [ref=e428] [cursor=pointer]':
+                    - /url: "#-快速开始"
+                    - img [ref=e429]
+                - generic [ref=e431]:
+                  - heading "方式一：在线访问" [level=3] [ref=e432]
+                  - 'link "Permalink: 方式一：在线访问" [ref=e433] [cursor=pointer]':
+                    - /url: "#方式一在线访问"
+                    - img [ref=e434]
+                - paragraph [ref=e436]: 直接访问演示地址即可使用，无需安装。
+                - generic [ref=e437]:
+                  - heading "方式二：本地运行" [level=3] [ref=e438]
+                  - 'link "Permalink: 方式二：本地运行" [ref=e439] [cursor=pointer]':
+                    - /url: "#方式二本地运行"
+                    - img [ref=e440]
+                - generic [ref=e442]:
+                  - generic [ref=e443]:
+                    - generic [ref=e444]: "# 克隆仓库"
+                    - text: git clone https://github.com/13888285815/ChinaTextbook-Pages.git cd ChinaTextbook-Pages
+                    - generic [ref=e445]: "# 使用任意HTTP服务器运行"
+                    - text: python3 -m http.server 8080
+                    - generic [ref=e446]: "# 或"
+                    - text: npx serve .
+                    - generic [ref=e447]: "# 访问 http://localhost:8080"
+                  - button "Copy code to clipboard" [ref=e449] [cursor=pointer]:
+                    - img [ref=e450]
+                - generic [ref=e453]:
+                  - heading "🛠️ 技术栈" [level=2] [ref=e454]
+                  - 'link "Permalink: 🛠️ 技术栈" [ref=e455] [cursor=pointer]':
+                    - /url: "#️-技术栈"
+                    - img [ref=e456]
+                - list [ref=e458]:
+                  - listitem [ref=e459]:
+                    - strong [ref=e460]: 前端框架
+                    - text: ": 原生 JavaScript (ES6+)"
+                  - listitem [ref=e461]:
+                    - strong [ref=e462]: PDF渲染
+                    - text: ": PDF.js 6.0.227"
+                  - listitem [ref=e463]:
+                    - strong [ref=e464]: 图标库
+                    - text: ": Font Awesome 6.7.2"
+                  - listitem [ref=e465]:
+                    - strong [ref=e466]: 样式
+                    - text: ": 原生CSS3（无框架依赖）"
+                  - listitem [ref=e467]:
+                    - strong [ref=e468]: 部署
+                    - text: ": GitHub Pages + GitHub Actions"
+                - generic [ref=e469]:
+                  - heading "⌨️ 快捷键" [level=2] [ref=e470]
+                  - 'link "Permalink: ⌨️ 快捷键" [ref=e471] [cursor=pointer]':
+                    - /url: "#️-快捷键"
+                    - img [ref=e472]
+                - table [ref=e475]:
+                  - rowgroup [ref=e476]:
+                    - row "快捷键 功能" [ref=e477]:
+                      - columnheader "快捷键" [ref=e478]
+                      - columnheader "功能" [ref=e479]
+                  - rowgroup [ref=e480]:
+                    - row "← / → 上一页/下一页" [ref=e481]:
+                      - cell "← / →" [ref=e482]:
+                        - code [ref=e483]: ←
+                        - text: /
+                        - code [ref=e484]: →
+                      - cell "上一页/下一页" [ref=e485]
+                    - row "+ / - 放大/缩小" [ref=e486]:
+                      - cell "+ / -" [ref=e487]:
+                        - code [ref=e488]: +
+                        - text: /
+                        - code [ref=e489]: "-"
+                      - cell "放大/缩小" [ref=e490]
+                    - row "0 适应宽度" [ref=e491]:
+                      - cell "0" [ref=e492]:
+                        - code [ref=e493]: "0"
+                      - cell "适应宽度" [ref=e494]
+                    - row "F 全屏模式" [ref=e495]:
+                      - cell "F" [ref=e496]:
+                        - code [ref=e497]: F
+                      - cell "全屏模式" [ref=e498]
+                    - row "B 添加/移除书签" [ref=e499]:
+                      - cell "B" [ref=e500]:
+                        - code [ref=e501]: B
+                      - cell "添加/移除书签" [ref=e502]
+                    - row "/ 搜索教材" [ref=e503]:
+                      - cell / [ref=e504]:
+                        - code [ref=e505]: /
+                      - cell "搜索教材" [ref=e506]
+                    - row "? 显示快捷键帮助" [ref=e507]:
+                      - cell "?" [ref=e508]:
+                        - code [ref=e509]: "?"
+                      - cell "显示快捷键帮助" [ref=e510]
+                    - row "Esc 退出全屏" [ref=e511]:
+                      - cell "Esc" [ref=e512]:
+                        - code [ref=e513]: Esc
+                      - cell "退出全屏" [ref=e514]
+                - generic [ref=e515]:
+                  - heading "📝 功能说明" [level=2] [ref=e516]
+                  - 'link "Permalink: 📝 功能说明" [ref=e517] [cursor=pointer]':
+                    - /url: "#-功能说明"
+                    - img [ref=e518]
+                - generic [ref=e520]:
+                  - heading "标注工具" [level=3] [ref=e521]
+                  - 'link "Permalink: 标注工具" [ref=e522] [cursor=pointer]':
+                    - /url: "#标注工具"
+                    - img [ref=e523]
+                - list [ref=e525]:
+                  - listitem [ref=e526]:
+                    - strong [ref=e527]: 高亮工具
+                    - text: "- 标记重点内容"
+                  - listitem [ref=e528]:
+                    - strong [ref=e529]: 画笔工具
+                    - text: "- 自由绘制"
+                  - listitem [ref=e530]:
+                    - strong [ref=e531]: 文字工具
+                    - text: "- 添加文字注释"
+                  - listitem [ref=e532]:
+                    - strong [ref=e533]: 橡皮擦
+                    - text: "- 擦除标注"
+                - paragraph [ref=e534]: 所有标注自动保存到浏览器本地存储，下次打开自动恢复。
+                - generic [ref=e535]:
+                  - heading "书签功能" [level=3] [ref=e536]
+                  - 'link "Permalink: 书签功能" [ref=e537] [cursor=pointer]':
+                    - /url: "#书签功能"
+                    - img [ref=e538]
+                - list [ref=e540]:
+                  - listitem [ref=e541]: 点击书签按钮保存当前页码
+                  - listitem [ref=e542]: 下次打开同一教材自动跳转到书签页
+                  - listitem [ref=e543]: 缩略图中显示书签标识
+                - generic [ref=e544]:
+                  - heading "Token设置" [level=3] [ref=e545]
+                  - 'link "Permalink: Token设置" [ref=e546] [cursor=pointer]':
+                    - /url: "#token设置"
+                    - img [ref=e547]
+                - paragraph [ref=e549]: 支持两种Token类型：
+                - list [ref=e550]:
+                  - listitem [ref=e551]:
+                    - code [ref=e552]: PRE_高级
+                    - text: "- 会员用户"
+                  - listitem [ref=e553]:
+                    - code [ref=e554]: BASIC_基础
+                    - text: "- 普通用户"
+                - paragraph [ref=e555]: （注：当前版本Token仅用于展示用户状态，核心功能免费开放）
+                - generic [ref=e556]:
+                  - heading "🤝 贡献" [level=2] [ref=e557]
+                  - 'link "Permalink: 🤝 贡献" [ref=e558] [cursor=pointer]':
+                    - /url: "#-贡献"
+                    - img [ref=e559]
+                - paragraph [ref=e561]: 欢迎贡献代码、报告问题或提出建议！
+                - generic [ref=e562]:
+                  - heading "📄 许可证" [level=2] [ref=e563]
+                  - 'link "Permalink: 📄 许可证" [ref=e564] [cursor=pointer]':
+                    - /url: "#-许可证"
+                    - img [ref=e565]
+                - paragraph [ref=e567]: 本项目仅供学习和研究使用，教材版权归原作者所有。
+                - generic [ref=e568]:
+                  - heading "🔗 相关链接" [level=2] [ref=e569]
+                  - 'link "Permalink: 🔗 相关链接" [ref=e570] [cursor=pointer]':
+                    - /url: "#-相关链接"
+                    - img [ref=e571]
+                - list [ref=e573]:
+                  - listitem [ref=e574]:
+                    - link "教材源仓库" [ref=e575] [cursor=pointer]:
+                      - /url: https://github.com/13888285815/ChinaTextbook
+                  - listitem [ref=e576]:
+                    - link "PDF.js官方文档" [ref=e577] [cursor=pointer]:
+                      - /url: https://mozilla.github.io/pdf.js/
+                - separator [ref=e578]
+                - paragraph [ref=e579]:
+                  - strong [ref=e580]: Made with ❤️ for Chinese Education
+        - generic [ref=e584]:
+          - generic [ref=e587]:
+            - heading "About" [level=2] [ref=e588]
+            - paragraph [ref=e589]: 中国教材电子课本索引页
+            - generic [ref=e590]:
+              - img [ref=e591]
+              - link "13888285815.github.io/ChinaTextbook-Pages/" [ref=e594] [cursor=pointer]:
+                - /url: https://13888285815.github.io/ChinaTextbook-Pages/
+            - heading "Resources" [level=3] [ref=e595]
+            - link "Readme" [ref=e597] [cursor=pointer]:
+              - /url: "#readme-ov-file"
+              - img [ref=e598]
+              - text: Readme
+            - link "Activity" [ref=e601] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/activity
+              - img [ref=e602]
+              - text: Activity
+            - heading "Stars" [level=3] [ref=e604]
+            - link "0 stars" [ref=e606] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/stargazers
+              - img [ref=e607]
+              - strong [ref=e609]: "0"
+              - text: stars
+            - heading "Watchers" [level=3] [ref=e610]
+            - link "0 watching" [ref=e612] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/watchers
+              - img [ref=e613]
+              - strong [ref=e615]: "0"
+              - text: watching
+            - heading "Forks" [level=3] [ref=e616]
+            - link "0 forks" [ref=e618] [cursor=pointer]:
+              - /url: /13888285815/ChinaTextbook-Pages/forks
+              - img [ref=e619]
+              - strong [ref=e621]: "0"
+              - text: forks
+            - link "Report repository" [ref=e623] [cursor=pointer]:
+              - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2F13888285815%2FChinaTextbook-Pages&report=13888285815+%28user%29
+          - generic [ref=e625]:
+            - heading "Releases" [level=2] [ref=e626]:
+              - link "Releases" [ref=e627] [cursor=pointer]:
+                - /url: /13888285815/ChinaTextbook-Pages/releases
+            - generic [ref=e628]: No releases published
+          - generic [ref=e630]:
+            - heading "Packages" [level=2] [ref=e631]:
+              - link "Packages" [ref=e632] [cursor=pointer]:
+                - /url: /users/13888285815/packages?repo_name=ChinaTextbook-Pages
+            - generic [ref=e633]: No packages published
+          - generic [ref=e635]:
+            - heading "Contributors 1" [level=2] [ref=e636]:
+              - link "Contributors 1" [ref=e637] [cursor=pointer]:
+                - /url: /13888285815/ChinaTextbook-Pages/graphs/contributors
+                - text: Contributors
+                - generic "1" [ref=e638]
+            - list [ref=e639]:
+              - listitem [ref=e640]:
+                - link "@13888285815" [ref=e641] [cursor=pointer]:
+                  - /url: https://github.com/13888285815
+                  - img "@13888285815" [ref=e642]
+                - link "13888285815" [ref=e644] [cursor=pointer]:
+                  - /url: https://github.com/13888285815
+                  - strong [ref=e645]: "13888285815"
+          - generic [ref=e647]:
+            - heading "Languages" [level=2] [ref=e648]
+            - list [ref=e653]:
+              - listitem [ref=e654]:
+                - link "JavaScript 98.0%" [ref=e655] [cursor=pointer]:
+                  - /url: /13888285815/ChinaTextbook-Pages/search?l=javascript
+                  - img [ref=e656]
+                  - generic [ref=e658]: JavaScript
+                  - generic [ref=e659]: 98.0%
+              - listitem [ref=e660]:
+                - link "HTML 2.0%" [ref=e661] [cursor=pointer]:
+                  - /url: /13888285815/ChinaTextbook-Pages/search?l=html
+                  - img [ref=e662]
+                  - generic [ref=e664]: HTML
+                  - generic [ref=e665]: 2.0%
+  - contentinfo [ref=e667]:
+    - heading "Footer" [level=2] [ref=e668]
+    - generic [ref=e669]:
+      - generic [ref=e670]:
+        - link "GitHub Homepage" [ref=e671] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e672]
+        - generic [ref=e674]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e675]:
+        - heading "Footer navigation" [level=3] [ref=e676]
+        - list "Footer navigation" [ref=e677]:
+          - listitem [ref=e678]:
+            - link "Terms" [ref=e679] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e680]:
+            - link "Privacy" [ref=e681] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e682]:
+            - link "Security" [ref=e683] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e684]:
+            - link "Status" [ref=e685] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e686]:
+            - link "Community" [ref=e687] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e688]:
+            - link "Docs" [ref=e689] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e690]:
+            - link "Contact" [ref=e691] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e692]:
+            - button "Manage cookies" [ref=e694] [cursor=pointer]
+          - listitem [ref=e695]:
+            - button "Do not share my personal information" [ref=e697] [cursor=pointer]
