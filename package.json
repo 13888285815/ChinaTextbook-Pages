@@ -1,0 +1,24 @@
+{
+  "name": "china-textbook-pages",
+  "version": "1.0.0",
+  "description": "中国教材电子课本在线浏览系统",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx live-server --port=8080"
+  },
+  "keywords": [
+    "中国教材",
+    "电子课本",
+    "PDF阅读器",
+    "在线教育",
+    "教材浏览"
+  ],
+  "author": "13888285815",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/13888285815/ChinaTextbook-Pages.git"
+  },
+  "homepage": "https://13888285815.github.io/ChinaTextbook-Pages/"
+}
