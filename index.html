@@ -149,7 +149,7 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 /* Responsive */
 @media(max-width:1180px){.main{flex-direction:column}.sidebar,.thumb-panel{width:100%;min-width:auto}.preview-area{margin-right:0;border-radius:0}.splitter-v{display:none}}
 @media(max-width:980px){.thumb-panel{display:none}.preview-area{margin-left:0}.sidebar{height:260px;min-height:220px;overflow:auto}.preview-body{padding:16px}}
-@media(max-width:760px){.menu-toggle{display:flex;width:40px;height:40px}.top-bar{padding:0 8px;gap:8px;flex-wrap:wrap;min-height:92px;align-items:center}.top-bar .logo{flex:1;min-width:150px}.top-bar .logo span{display:none}.search-global{order:10;width:100%;max-width:none;margin-top:4px}.preview-toolbar{gap:2px;padding:0 6px;height:42px;position:fixed;top:92px;left:0;right:0;z-index:50;background:rgba(12,20,49,.98);border-bottom:1px solid rgba(255,255,255,.06);align-items:center}.tbtn{width:30px;height:30px;border-radius:8px;font-size:13px}.page-info{margin-left:0;font-size:10px;gap:4px}.page-info input{width:36px;padding:4px;font-size:10px}.preview-body{padding:4px;padding-top:134px;padding-bottom:70px;overflow:auto;-webkit-overflow-scrolling:touch}.status-bar{display:none}.sidebar{position:fixed;left:0;top:92px;bottom:70px;width:100%;max-width:360px;z-index:200;margin-left:0;transform:translateX(-100%);transition:transform .3s ease;box-shadow:8px 0 30px rgba(0,0,0,.3)}.sidebar.mobile-open{transform:translateX(0)}.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199}.sidebar-backdrop.show{display:block}.sidebar .tree-wrap{height:calc(100vh - 250px);overflow:auto}.tree-label{padding:12px 14px !important;min-height:44px}.tree-arrow{width:24px;height:24px;font-size:14px}.tree-icon{width:22px;height:22px;font-size:16px}.tree-name{font-size:15px;line-height:1.5}.tree-count{font-size:12px;padding:3px 10px}.tree-children::before{left:26px}.mobile-bottom-bar{display:flex}}
+@media(max-width:760px){.menu-toggle{display:flex;width:40px;height:40px}.top-bar{padding:0 8px;gap:8px;flex-wrap:wrap;min-height:92px;align-items:center}.top-bar .logo{flex:1;min-width:150px}.top-bar .logo span{display:none}.search-global{order:10;width:100%;max-width:none;margin-top:4px}.preview-toolbar{gap:2px;padding:0 6px;height:42px;position:fixed;top:92px;left:0;right:0;z-index:50;background:rgba(12,20,49,.98);border-bottom:1px solid rgba(255,255,255,.06);align-items:center}.tbtn{width:30px;height:30px;border-radius:8px;font-size:13px}.page-info{margin-left:0;font-size:10px;gap:4px}.page-info input{width:36px;padding:4px;font-size:10px}.preview-body{padding:4px;padding-top:134px;padding-bottom:120px;overflow:auto;-webkit-overflow-scrolling:touch}.status-bar{display:none}.sidebar{position:fixed;left:0;top:92px;bottom:116px;width:100%;max-width:360px;z-index:200;margin-left:0;transform:translateX(-100%);transition:transform .3s ease;box-shadow:8px 0 30px rgba(0,0,0,.3)}.sidebar.mobile-open{transform:translateX(0)}.sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199}.sidebar-backdrop.show{display:block}.sidebar .tree-wrap{height:calc(100vh - 300px);overflow:auto}.tree-label{padding:12px 14px !important;min-height:44px}.tree-arrow{width:24px;height:24px;font-size:14px}.tree-icon{width:22px;height:22px;font-size:16px}.tree-name{font-size:15px;line-height:1.5}.tree-count{font-size:12px;padding:3px 10px}.tree-children::before{left:26px}.mobile-bottom-bar{display:flex}.mobile-bottom-bar-2{display:flex}}
 @media(max-width:480px){.sidebar{max-width:100%;width:100%}.tree-label{padding:14px 16px !important}.tree-arrow{width:28px;height:28px}.tree-icon{width:24px;height:24px;font-size:18px}.tree-name{font-size:16px}.tree-children::before{left:30px}.preview-toolbar{gap:3px}.tbtn{width:30px;height:30px}}
 /* Floating sidebar toggle - always visible */
 .sidebar-float-toggle{position:fixed;left:12px;bottom:60px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#7c5dfc,#5b3de8);color:#fff;border:none;box-shadow:0 8px 24px rgba(124,93,252,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:250;font-size:18px;transition:transform .2s,box-shadow .2s}
@@ -162,6 +162,11 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 .mobile-bottom-bar .mb-btn:hover,.mobile-bottom-bar .mb-btn.active{color:#7c5dfc}
 .mobile-bottom-bar .mb-btn i{font-size:20px;margin-bottom:3px}
 .mobile-bottom-bar .mb-btn span{font-size:10px}
+.mobile-bottom-bar-2{position:fixed;bottom:60px;left:0;right:0;height:56px;background:rgba(12,20,49,.95);border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-around;z-index:99;padding:0 16px;display:none}
+.mobile-bottom-bar-2 .mb-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;width:60px;height:46px;color:#9fb4d8;cursor:pointer;transition:all .2s}
+.mobile-bottom-bar-2 .mb-btn:hover,.mobile-bottom-bar-2 .mb-btn.active{color:#7c5dfc}
+.mobile-bottom-bar-2 .mb-btn i{font-size:18px;margin-bottom:2px}
+.mobile-bottom-bar-2 .mb-btn span{font-size:9px}
 </style>
 <script>
 // URL.parse polyfill for older browsers (Node.js API not available in browsers)
@@ -343,11 +348,18 @@ if (typeof URL.parse !== 'function') {
   </footer>
   <!-- Mobile Bottom Bar -->
   <div class="mobile-bottom-bar" id="mobileBottomBar">
+    <div class="mb-btn" onclick="firstPage()" title="首页"><i class="fas fa-angle-double-left"></i><span>首页</span></div>
+    <div class="mb-btn" onclick="prevPage()" title="上一页"><i class="fas fa-angle-left"></i><span>上页</span></div>
     <div class="mb-btn" onclick="toggleSidebar()" title="目录"><i class="fas fa-folder-tree"></i><span>目录</span></div>
+    <div class="mb-btn" onclick="nextPage()" title="下一页"><i class="fas fa-angle-right"></i><span>下页</span></div>
+    <div class="mb-btn" onclick="lastPage()" title="末页"><i class="fas fa-angle-double-right"></i><span>末页</span></div>
+  </div>
+  <div class="mobile-bottom-bar-2" id="mobileBottomBar2">
     <div class="mb-btn" onclick="zoomOut()" title="缩小"><i class="fas fa-search-minus"></i><span>缩小</span></div>
     <div class="mb-btn" onclick="zoomFit()" title="适应"><i class="fas fa-expand"></i><span>适应</span></div>
     <div class="mb-btn" onclick="zoomIn()" title="放大"><i class="fas fa-search-plus"></i><span>放大</span></div>
     <div class="mb-btn" onclick="toggleBookmark()" title="书签"><i class="fas fa-bookmark"></i><span>书签</span></div>
+    <div class="mb-btn" onclick="toggleAnnotationTool()" title="标记"><i class="fas fa-pencil-alt"></i><span>标记</span></div>
   </div>
 </div>
 <div class="modal-bg" id="tokenModal">
@@ -1175,75 +1187,64 @@ function handleTouchEnd(e) {
   
   if (isPanning && pdfScale > 1) {
     isPanning = false;
-    // 限制平移边界
     constrainPan();
     return;
   }
   
-  const touchEndY = e.changedTouches[0]?.clientY || 0;
-  const touchEndX = e.changedTouches[0]?.clientX || 0;
-  const deltaY = touchStartY - touchEndY;
-  const deltaX = touchStartX - touchEndX;
-  const touchDuration = Date.now() - touchStartTime;
-  const minSwipeDistance = 40;
-  const maxSwipeDuration = 500;
-  
-  // 检查是否为快速滑动
-  if (touchDuration < maxSwipeDuration && Math.abs(deltaY) > minSwipeDistance && Math.abs(deltaX) > minSwipeDistance) {
-    // 对角线滑动，判断主要方向
-    if (Math.abs(deltaY) > Math.abs(deltaX) * 1.2) {
-      handleVerticalSwipe(deltaY);
-    } else if (Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-      handleHorizontalSwipe(deltaX);
-    }
-  } else if (touchDuration < maxSwipeDuration && Math.abs(deltaY) > minSwipeDistance) {
-    handleVerticalSwipe(deltaY);
-  } else if (touchDuration < maxSwipeDuration && Math.abs(deltaX) > minSwipeDistance) {
-    handleHorizontalSwipe(deltaX);
-  }
+  // 单指滑动翻页（仅当未进行平移操作时）
+  if (!isPanning && pdfDoc && Date.now() - touchStartTime < 300) {
+    const deltaY = touchStartY - (e.changedTouches[0]?.clientY || touchStartY);
+    const deltaX = touchStartX - (e.changedTouches[0]?.clientX || touchStartX);
+    const minSwipeDistance = 50;
+    
+    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > minSwipeDistance) {
+      if (deltaY > 0) {
+        nextPage();
+      } else {
+        prevPage();
+      }
+    } else if (Math.abs(deltaX) > minSwipeDistance) {
+      if (deltaX > 0) {
+        nextPage();
+      } else {
+        prevPage();
+      }
 }
 
-function handleVerticalSwipe(deltaY) {
+function firstPage() {
   if (!pdfDoc) return;
-  
-  // 上滑（手指从下往上）- 翻到下一页或首页
-  if (deltaY > 0) {
-    if (currentPage < pdfDoc.numPages) {
-      nextPage();
-      showToast(`第 ${currentPage} 页`);
-    } else {
-      showToast('已经是最后一页');
-    }
-  } else {
-    // 下滑（手指从上往下）- 翻到上一页或首页
-    if (currentPage > 1) {
-      prevPage();
-      showToast(`第 ${currentPage} 页`);
-    } else {
-      showToast('已经是第一页');
-    }
-  }
+  if (currentPage === 1) return;
+  currentPage = 1;
+  updatePageNumber();
+  renderPage(currentPage);
 }
 
-function handleHorizontalSwipe(deltaX) {
+function lastPage() {
   if (!pdfDoc) return;
+  if (currentPage === pdfDoc.numPages) return;
+  currentPage = pdfDoc.numPages;
+  updatePageNumber();
+  renderPage(currentPage);
+}
+
+function toggleAnnotationTool() {
+  if (!pdfDoc) {
+    showToast('请先打开教材');
+    return;
+  }
   
-  // 右滑（手指从左往右）- 翻到下一页
-  if (deltaX > 0) {
-    if (currentPage < pdfDoc.numPages) {
-      nextPage();
-      showToast(`第 ${currentPage} 页`);
-    } else {
-      showToast('已经是最后一页');
-    }
+  if (activeTool) {
+    // 当前有激活的工具，取消激活
+    activeTool = null;
+    showToast('已退出标记模式');
+    pdfCanvas.style.cursor = 'default';
+    
+    // 重置标注工具按钮样式
+    document.querySelectorAll('.tbtn').forEach(btn => btn.classList.remove('active'));
   } else {
-    // 左滑（手指从右往左）- 翻到上一页
-    if (currentPage > 1) {
-      prevPage();
-      showToast(`第 ${currentPage} 页`);
-    } else {
-      showToast('已经是第一页');
-    }
+    // 激活高亮工具作为默认标注工具
+    setTool('highlight');
+    showToast('已进入标记模式');
   }
 }
 
