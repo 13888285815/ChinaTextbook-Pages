@@ -164,18 +164,30 @@ body.fullscreen .preview-toolbar{background:rgba(12,20,49,.98);position:sticky;t
 .mobile-bottom-bar .mb-btn span{font-size:10px}
 </style>
 <script src="context-menu.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
-  // PDF.js configuration
-  if (window.pdfjsLib) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  }
-  // Mobile fallback: disable worker for older browsers
-  if ('ontouchstart' in window || navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
-    try {
+  // PDF.js configuration for iOS Safari compatibility
+  if (typeof pdfjsLib !== 'undefined') {
+    // Disable worker for iOS Safari to avoid memory and rendering issues
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isMobile = 'ontouchstart' in window || navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/);
+    
+    if (isIOS) {
       pdfjsLib.GlobalWorkerOptions.workerSrc = '';
-    } catch(e) {
-      console.warn('PDF.js worker disabled for mobile');
+      console.log('PDF.js: Worker disabled for iOS Safari');
+    } else if (isMobile) {
+      try {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+      } catch(e) {
+        console.warn('PDF.js worker disabled for mobile');
+      }
+    } else {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    }
+    
+    // iOS Safari specific fixes
+    if (isIOS) {
+      pdfjsLib.disableWorker = true;
     }
   }
 </script>
@@ -718,10 +730,10 @@ async function showPreview(src) {
   pdfViewer.style.display = 'block';
   showLoading('正在加载 PDF...');
   
-  // 移动端适配：重置缩放
-  if ('ontouchstart' in window) {
-    pdfScale = 1.0;
-  }
+  // 重置缩放和平移
+  pdfScale = 1.0;
+  pdfTranslateX = 0;
+  pdfTranslateY = 0;
   
   try {
     // 验证URL
@@ -738,22 +750,49 @@ async function showPreview(src) {
     
     console.log('PDF URL验证通过:', url.href);
     
-    // 移动端配置优化
+    // iOS Safari 检测
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    // PDF配置 - 针对iOS Safari做特殊优化
     const pdfConfig = { 
       url: src, 
       cMapUrl: './pdfjs/cmaps/', 
       cMapPacked: true,
       withCredentials: false,
       disableFontFace: true,
-      useSystemFonts: true
+      useSystemFonts: true,
+      maxImageSize: 1024,
+      stopAtErrors: false
     };
     
-    // 移动端禁用worker以提高兼容性
-    if ('ontouchstart' in window || navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
+    // iOS Safari 必须禁用worker
+    if (isIOS) {
+      pdfConfig.workerSrc = '';
+      pdfConfig.disableWorker = true;
+      console.log('iOS Safari detected: worker disabled');
+    } else if ('ontouchstart' in window || navigator.userAgent.match(/Android/)) {
       pdfConfig.workerSrc = '';
     }
     
-    pdfDoc = await pdfjsLib.getDocument(pdfConfig).promise;
+    // 使用异步方式加载PDF，避免iOS主线程阻塞
+    let loadingTask;
+    try {
+      loadingTask = pdfjsLib.getDocument(pdfConfig);
+      pdfDoc = await loadingTask.promise;
+    } catch (initialError) {
+      console.warn('Initial load failed, retrying without CMap:', initialError);
+      // 重试：禁用CMaps以提高兼容性
+      const retryConfig = { 
+        url: src, 
+        withCredentials: false,
+        disableFontFace: true,
+        useSystemFonts: true,
+        workerSrc: '',
+        disableWorker: true
+      };
+      loadingTask = pdfjsLib.getDocument(retryConfig);
+      pdfDoc = await loadingTask.promise;
+    }
     
     console.log('PDF加载成功，页数:', pdfDoc.numPages);
     
@@ -763,7 +802,7 @@ async function showPreview(src) {
     pageInput.max = pageCount;
     
     // 移动端延迟加载缩略图以节省内存
-    if (!('ontouchstart' in window)) {
+    if (!isIOS && !('ontouchstart' in window)) {
       populateThumbs(pageCount);
     }
     
@@ -780,10 +819,12 @@ async function showPreview(src) {
         errorMsg = 'PDF文件不存在或地址错误';
       } else if (e.message.includes('CORS') || e.message.includes('Access-Control')) {
         errorMsg = '跨域访问被拒绝';
-      } else if (e.message.includes('network') || e.message.includes('fetch') || e.message.includes('request')) {
+      } else if (e.message.includes('network') || e.message.includes('fetch') || e.message.includes('request') || e.message.includes('Failed to fetch')) {
         errorMsg = '网络错误，请检查网络连接';
       } else if (e.message.includes('Unexpected server response')) {
         errorMsg = '服务器响应异常，请稍后重试';
+      } else if (e.message.includes('Invalid PDF') || e.message.includes('Corrupt')) {
+        errorMsg = 'PDF文件损坏或格式不正确';
       } else {
         errorMsg = 'PDF加载失败: ' + e.message;
       }
